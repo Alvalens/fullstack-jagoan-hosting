@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/button";
+import Layout from "./components/Layout/Layout";
 
 function App() {
 	return (
 		<>
-			<div className="w-100">
-				<Button>Click me</Button>
-			</div>
+			<Layout>
+				test
+			</Layout>
 		</>
 	);
 }
