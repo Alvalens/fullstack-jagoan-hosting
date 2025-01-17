@@ -17,8 +17,10 @@ import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User } from "lucide-react";
 import { DropdownMenuGroup } from "@radix-ui/react-dropdown-menu";
+import { Outlet } from "react-router-dom";
 
-export default function Layout({ children }) {
+
+export default function Layout() {
   const user = {
     name: "John Doe",
     email: "test@gmail.com"
@@ -76,8 +78,8 @@ export default function Layout({ children }) {
 							</DropdownMenu>
 						</div>
 					</header>
-					<main className="flex-1 overflow-y-auto mx-5">
-						{children}
+					<main className="flex-1 overflow-y-auto mx-5 p-5">
+						<Outlet />
 					</main>
 				</SidebarInset>
 			</SidebarProvider>
