@@ -2,7 +2,8 @@ import {
 	Command,
 	Home,
 	Settings,
-	Users
+	Users,
+  HomeIcon
 } from "lucide-react";
 
 import {
@@ -31,6 +32,11 @@ const menuItems = [
 				url: "/penghuni",
 				icon: Users,
 			},
+      {
+        title: "Rumah",
+        url: "/rumah",
+        icon: HomeIcon,
+      },
 		],
 	},
 	{
