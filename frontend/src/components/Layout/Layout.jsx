@@ -22,6 +22,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { logout } from "@/store/authSlice";
 import { Navigate } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 
 export default function Layout() {
@@ -76,8 +77,7 @@ export default function Layout() {
 											<span>Profile</span>
 										</DropdownMenuItem>
 										<DropdownMenuItem
-                      onSelect={handleLogout}
-                    >
+											onSelect={handleLogout}>
 											<LogOut className="mr-2 h-4 w-4" />
 											<span>Log out</span>
 										</DropdownMenuItem>
@@ -91,6 +91,7 @@ export default function Layout() {
 					</main>
 				</SidebarInset>
 			</SidebarProvider>
+			<Toaster position="top-center" reverseOrder={false} />
 		</>
 	);
 }
