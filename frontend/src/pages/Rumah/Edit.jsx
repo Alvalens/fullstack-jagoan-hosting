@@ -14,168 +14,99 @@ import { z } from "zod";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
-const penghuniSchema = z.object({
-	namaLengkap: z.string().min(1, "Nama lengkap wajib diisi"),
-	fotoKTP: z
-		.instanceof(File)
-		.refine(
-			(file) => file.size < 5 * 1024 * 1024,
-			"Ukuran file maksimal 5MB"
-		),
-	statusPenghuni: z.enum(["kontrak", "tetap"], "Pilih status penghuni"),
-	nomorTelepon: z.string().regex(/^08\d{8,11}$/, "Nomor telepon tidak valid"),
-	statusPernikahan: z.enum(["sudah", "belum"], "Pilih status pernikahan"),
+// Adjust the schema to match the new record fields
+const rumahSchema = z.object({
+	name: z.string().min(1, "Nama rumah wajib diisi"),
+	address: z.string().min(1, "Alamat wajib diisi"),
+	status: z.enum(["dihuni", "tidak dihuni"], "Pilih status rumah"),
 });
 
+// Example existing data for editing
 const mockData = {
-	namaLengkap: "John Doe",
-	fotoKTP: null, // Replace with actual file or null for no initial image
-	statusPenghuni: "kontrak",
-	nomorTelepon: "08123456789",
-	statusPernikahan: "sudah",
+	name: "Rumah 1",
+	address: "Jl. Raya",
+	status: "tidak dihuni",
 };
 
-export default function EditPenghuni() {
+
+export default function EditRumah() {
 	const {
 		register,
 		handleSubmit,
 		setValue,
 		formState: { errors },
 	} = useForm({
-		resolver: zodResolver(penghuniSchema),
+		resolver: zodResolver(rumahSchema),
 		defaultValues: mockData,
 	});
 
-	const [fotoPreview, setFotoPreview] = useState(null);
-
-	// Set initial values
+	// Load existing data into form
 	useEffect(() => {
-		if (mockData.fotoKTP) {
-			setFotoPreview(URL.createObjectURL(mockData.fotoKTP));
-		}
-
-		// Initialize values in the form
-		setValue("namaLengkap", mockData.namaLengkap);
-		setValue("statusPenghuni", mockData.statusPenghuni);
-		setValue("nomorTelepon", mockData.nomorTelepon);
-		setValue("statusPernikahan", mockData.statusPernikahan);
+		setValue("name", mockData.name);
+		setValue("address", mockData.address);
+		setValue("status", mockData.status);
 	}, [setValue]);
 
 	const onSubmit = (data) => {
 		console.log("Form Data:", data);
-		toast.success("Data penghuni berhasil diperbarui");
-	};
-
-	const handleFileUpload = (e) => {
-		const file = e.target.files?.[0];
-		if (file) {
-			setValue("fotoKTP", file);
-			setFotoPreview(URL.createObjectURL(file));
-		}
+		toast.success("Data rumah berhasil diperbarui");
 	};
 
 	return (
-		<div className="mx-auto p-6 bg-whitrounded-lg shadow">
-			<h1 className="text-2xl font-bold mb-4">Edit Penghuni</h1>
+		<div className="mx-auto p-6 bg-white rounded-lg shadow">
+			<h1 className="text-2xl font-bold mb-4">Edit Rumah</h1>
 			<form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-				{/* Nama Lengkap */}
+				{/* Nama Rumah */}
 				<div>
-					<Label htmlFor="namaLengkap">Nama Lengkap</Label>
+					<Label htmlFor="name">Nama Rumah</Label>
 					<Input
-						id="namaLengkap"
-						{...register("namaLengkap")}
-						placeholder="Masukkan nama lengkap"
+						id="name"
+						{...register("name")}
+						placeholder="Masukkan nama rumah"
 						className="mt-2"
 					/>
-					{errors.namaLengkap && (
+					{errors.name && (
 						<p className="text-red-500 text-sm mt-1">
-							{errors.namaLengkap.message}
+							{errors.name.message}
 						</p>
 					)}
 				</div>
 
-				{/* Foto KTP */}
+				{/* Alamat */}
 				<div>
-					<Label htmlFor="fotoKTP">Foto KTP</Label>
+					<Label htmlFor="address">Alamat</Label>
 					<Input
-						id="fotoKTP"
-						type="file"
-						accept="image/*"
-						onChange={handleFileUpload}
+						id="address"
+						{...register("address")}
+						placeholder="Masukkan alamat"
 						className="mt-2"
 					/>
-					{fotoPreview && (
-						<img
-							src={fotoPreview}
-							alt="Preview KTP"
-							className="mt-2 w-32 h-32 object-cover rounded"
-						/>
-					)}
-					{errors.fotoKTP && (
+					{errors.address && (
 						<p className="text-red-500 text-sm mt-1">
-							{errors.fotoKTP.message}
+							{errors.address.message}
 						</p>
 					)}
 				</div>
 
-				{/* Status Penghuni */}
+				{/* Status */}
 				<div>
-					<Label>Status Penghuni</Label>
+					<Label>Status</Label>
 					<Select
-						value={mockData.statusPenghuni}
-						onValueChange={(value) =>
-							setValue("statusPenghuni", value)
-						}>
+						onValueChange={(value) => setValue("status", value)}
+						value={mockData.status}>
 						<SelectTrigger>
-							<SelectValue placeholder="Pilih status penghuni" />
+							<SelectValue placeholder="Pilih status rumah" />
 						</SelectTrigger>
 						<SelectContent>
-							<SelectItem value="kontrak">Kontrak</SelectItem>
-							<SelectItem value="tetap">Tetap</SelectItem>
+							<SelectItem value="dihuni">Dihuni</SelectItem>
+							<SelectItem value="tidak dihuni">
+								Tidak Dihuni
+							</SelectItem>
 						</SelectContent>
 					</Select>
-					{errors.statusPenghuni && (
+					{errors.status && (
 						<p className="text-red-500 text-sm mt-1">
-							{errors.statusPenghuni.message}
-						</p>
-					)}
-				</div>
-
-				{/* Nomor Telepon */}
-				<div>
-					<Label htmlFor="nomorTelepon">Nomor Telepon</Label>
-					<Input
-						id="nomorTelepon"
-						{...register("nomorTelepon")}
-						placeholder="Masukkan nomor telepon"
-						className="mt-2"
-					/>
-					{errors.nomorTelepon && (
-						<p className="text-red-500 text-sm mt-1">
-							{errors.nomorTelepon.message}
-						</p>
-					)}
-				</div>
-
-				{/* Status Pernikahan */}
-				<div>
-					<Label>Status Pernikahan</Label>
-					<Select
-						value={mockData.statusPernikahan}
-						onValueChange={(value) =>
-							setValue("statusPernikahan", value)
-						}>
-						<SelectTrigger>
-							<SelectValue placeholder="Pilih status pernikahan" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="sudah">Sudah Menikah</SelectItem>
-							<SelectItem value="belum">Belum Menikah</SelectItem>
-						</SelectContent>
-					</Select>
-					{errors.statusPernikahan && (
-						<p className="text-red-500 text-sm mt-1">
-							{errors.statusPernikahan.message}
+							{errors.status.message}
 						</p>
 					)}
 				</div>

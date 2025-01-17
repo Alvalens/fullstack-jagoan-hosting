@@ -8,6 +8,9 @@ import PenghuniCreate from "./pages/Penghuni/Create";
 import PenghuniEdit from "./pages/Penghuni/Edit";
 
 import RumahIndex from "./pages/Rumah/Index";
+import RumahCreate from "./pages/Rumah/Create";
+import RumahEdit from "./pages/Rumah/Edit";
+import RumahShow from "./pages/Rumah/Show";
 
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
@@ -36,6 +39,11 @@ function InnerApp() {
 				<Route path="/penghuni/:id/edit" element={<PenghuniEdit />} />
 
 				<Route path="/rumah" element={<RumahIndex />} />
+				<Route path="/rumah/create" element={<RumahCreate />} />
+				<Route path="/rumah/:id/edit" element={<RumahEdit />} />
+				<Route path="/rumah/:id" element={<RumahShow />} />
+
+				
 			</Route>
 
 			{/* 404 Route */}

@@ -17,7 +17,6 @@ const dummyData = [
 		id: 1,
 		name: "Rumah 1",
 		address: "Jl. Raya",
-		penghuni: "John Doe",
 		status: "tidak dihuni",
 	},
 	{
@@ -105,9 +104,6 @@ export default function RumahIndex() {
 							Alamat
 						</TableHead>
 						<TableHead className="px-4 py-2 text-left">
-							Penghuni
-						</TableHead>
-						<TableHead className="px-4 py-2 text-left">
 							Status
 						</TableHead>
 						<TableHead className="px-4 py-2 text-left">
@@ -126,9 +122,6 @@ export default function RumahIndex() {
 							</TableCell>
 							<TableCell className="whitespace-nowrap px-4 py-2">
 								{r.address}
-							</TableCell>
-							<TableCell className="whitespace-nowrap px-4 py-2">
-								{r.penghuni}
 							</TableCell>
 							<TableCell className="whitespace-nowrap px-4 py-2">
 								<span
