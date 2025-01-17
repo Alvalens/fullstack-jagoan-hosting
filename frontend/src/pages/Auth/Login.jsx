@@ -1,6 +1,12 @@
+import { useSelector } from "react-redux";
 import Form from "./Form";
+import { Navigate } from "react-router-dom";
 
 export default function Login() {
+  const { user } = useSelector((state) => state.auth);
+  if (user) {
+    return <Navigate to="/dashboard" />;
+  }
 	return (
     <div className="grid min-h-screen w-full grid-cols-1 lg:grid-cols-2">
       <div className="hidden bg-gray-100 lg:block dark:bg-gray-800">

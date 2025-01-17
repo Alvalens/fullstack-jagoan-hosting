@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { loginUser } from "@/store/authSlice";
 
 // ShadCN components
@@ -30,7 +30,6 @@ const loginSchema = z.object({
 export default function FormComponent() {
 	const dispatch = useDispatch();
 	const auth = useSelector((state) => state.auth);
-	const navigate = useNavigate();
 
 	const form = useForm({
 		resolver: zodResolver(loginSchema),
@@ -44,7 +43,7 @@ export default function FormComponent() {
 		try {
 			const result = await dispatch(loginUser(data));
 			if (loginUser.fulfilled.match(result)) {
-				navigate("/dashboard");
+				Navigate("/dashboard");
 			} else {
 				console.error("Login failed:", result.payload);
 			}
