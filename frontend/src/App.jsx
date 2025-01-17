@@ -5,6 +5,7 @@ import PrivateRoute from "./utils/PrivateRoute";
 import Login from "./pages/Auth/Login";
 import PenghuniIndex from "./pages/Penghuni/Index";
 import PenghuniCreate from "./pages/Penghuni/Create";
+import PenghuniEdit from "./pages/Penghuni/Edit";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import { Provider } from "react-redux";
@@ -29,6 +30,7 @@ function InnerApp() {
 				{/* Nested Routes */}
 				<Route path="/penghuni" element={<PenghuniIndex />} />
 				<Route path="/penghuni/create" element={<PenghuniCreate />} />
+				<Route path="/penghuni/:id/edit" element={<PenghuniEdit />} />
 			</Route>
 
 			{/* 404 Route */}
