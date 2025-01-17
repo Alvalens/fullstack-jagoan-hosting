@@ -18,18 +18,24 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User } from "lucide-react";
 import { DropdownMenuGroup } from "@radix-ui/react-dropdown-menu";
 import { Outlet } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { logout } from "@/store/authSlice";
+import { Navigate } from "react-router-dom";
 
 
 export default function Layout() {
-  const user = {
-    name: "John Doe",
-    email: "test@gmail.com"
-  };
+    const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+      const handleLogout = () => {
+			dispatch(logout());
+			Navigate("/login");
+		};
 	return (
 		<>
 			<SidebarProvider>
 				<AppSidebar />
-				<SidebarInset>
+				<SidebarInset className="overflow-x-hidden">
 					<header className="flex h-16 shrink-0 items-center justify-between">
 						<div className="flex items-center gap-2 px-4">
 							<SidebarTrigger className="-ml-1" />
@@ -44,7 +50,7 @@ export default function Layout() {
 								<DropdownMenuTrigger asChild>
 									<Avatar className="h-8 w-8 cursor-pointer">
 										<AvatarImage
-											src={`https://ui-avatars.com/api/?name=test`}
+											src={`https://ui-avatars.com/api/?name=${user?.username}`}
 										/>
 										<AvatarFallback>JD</AvatarFallback>
 									</Avatar>
@@ -56,7 +62,7 @@ export default function Layout() {
 									<DropdownMenuLabel className="font-normal">
 										<div className="flex flex-col space-y-1">
 											<p className="text-sm font-medium leading-none">
-												{user?.name}
+												{user?.username}
 											</p>
 											<p className="text-xs leading-none text-muted-foreground">
 												{user?.email}
@@ -69,7 +75,9 @@ export default function Layout() {
 											<User className="mr-2 h-4 w-4" />
 											<span>Profile</span>
 										</DropdownMenuItem>
-										<DropdownMenuItem>
+										<DropdownMenuItem
+                      onSelect={handleLogout}
+                    >
 											<LogOut className="mr-2 h-4 w-4" />
 											<span>Log out</span>
 										</DropdownMenuItem>

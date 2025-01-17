@@ -3,6 +3,7 @@ import Layout from "./components/Layout/Layout";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import PrivateRoute from "./utils/PrivateRoute";
 import Login from "./pages/Auth/Login";
+import PenghuniIndex from "./pages/Penghuni/Index";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import { Provider } from "react-redux";
@@ -23,6 +24,9 @@ function InnerApp() {
 					</PrivateRoute>
 				}>
 				<Route path="/dashboard" element={<Dashboard />} />
+
+				{/* Nested Routes */}
+				<Route path="/penghuni" element={<PenghuniIndex />} />
 			</Route>
 
 			{/* 404 Route */}

@@ -2,6 +2,7 @@ import {
 	Command,
 	Home,
 	Settings,
+	Users
 } from "lucide-react";
 
 import {
@@ -16,15 +17,19 @@ import {
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-
 const menuItems = [
 	{
 		category: "Menu",
 		items: [
 			{
 				title: "Dashboard",
-				url: "/admin/dashboard",
+				url: "/dashboard",
 				icon: Home,
+			},
+			{
+				title: "Penghuni",
+				url: "/penghuni",
+				icon: Users,
 			},
 		],
 	},
