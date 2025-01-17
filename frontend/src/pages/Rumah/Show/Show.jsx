@@ -18,17 +18,23 @@ export default function ShowRumah() {
 				<h1 className="text-2xl font-bold mb-4 flex items-center">
 					Detail Rumah
 				</h1>
-				<div className="flex items-center gap-2 text-lg mb-2">
+				<div className="flex items-center gap-2 text-md mb-2">
 					<Home size={20} className="text-gray-600" />
-					<span>Nama Rumah: Rumah 1</span>
+					<span>
+						<span className="font-bold">Nama Rumah:</span> Rumah 1
+					</span>
 				</div>
-				<div className="flex items-center gap-2 text-lg mb-2">
+				<div className="flex items-center gap-2 text-md mb-2">
 					<MapPin size={20} className="text-gray-600" />
-					<span>Alamat: Jl. Pahlawan No. 1</span>
+					<span>
+						<span className="font-bold">Alamat:</span> Jl. Pahlawan No. 1
+					</span>
 				</div>
-				<div className="flex items-center gap-2 text-lg">
+				<div className="flex items-center gap-2 text-md">
 					<CheckCircle size={20} className="text-gray-600" />
-					<span>Status: Dihuni</span>
+					<span>
+						<span className="font-bold">Status:</span> Dihuni
+					</span>
 				</div>
 			</div>
 
@@ -36,27 +42,32 @@ export default function ShowRumah() {
 				<h1 className="text-2xl font-bold mb-4 flex items-center">
 					Detail Penghuni
 					<Link to="add-penghuni">
-						<PlusCircleIcon
-							className="ms-3 cursor-pointer"
-							size={24}
-						/>
+						<PlusCircleIcon className="ms-3 cursor-pointer" size={24} />
 					</Link>
 				</h1>
-				<div className="flex items-center gap-2 text-lg mb-2">
+				<div className="flex items-center gap-2 text-md mb-2">
 					<User size={20} className="text-gray-600" />
-					<span>Nama Penghuni: Budi</span>
+					<span>
+						<span className="font-bold">Nama Penghuni:</span> Budi
+					</span>
 				</div>
-				<div className="flex items-center gap-2 text-lg mb-2">
+				<div className="flex items-center gap-2 text-md mb-2">
 					<Briefcase size={20} className="text-gray-600" />
-					<span>Status: Tetap</span>
+					<span>
+						<span className="font-bold">Status:</span> Tetap
+					</span>
 				</div>
-				<div className="flex items-center gap-2 text-lg mb-2">
+				<div className="flex items-center gap-2 text-md mb-2">
 					<Heart size={20} className="text-gray-600" />
-					<span>Status Pernikahan: Belum Menikah</span>
+					<span>
+						<span className="font-bold">Status Pernikahan:</span> Belum Menikah
+					</span>
 				</div>
-				<div className="flex items-center gap-2 text-lg">
+				<div className="flex items-center gap-2 text-md">
 					<Calendar size={20} className="text-gray-600" />
-					<span>Tanggal Masuk: 2021-08-01</span>
+					<span>
+						<span className="font-bold">Tanggal Masuk:</span> 2021-08-01
+					</span>
 				</div>
 
 				<div className="flex justify-end mt-4 gap-3">

@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
 	Table,
@@ -9,19 +10,22 @@ import {
 } from "@/components/ui/table";
 import { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const dummyData = [
 	{
 		id: 1,
-		tanggal: "2021-08-01",
-		jenis: "Iuran Kebersihan",
-		nominal: "Rp 100.000",
+		tanggal: "2024-08",
+		terbayar: "15.000",
+		nominal: "115.000",
+		status: "Belum Lunas",
 	},
 	{
 		id: 2,
-		tanggal: "2021-08-01",
-		jenis: "Iuran Satpam",
-		nominal: "Rp 200.000",
+		tanggal: "2024-09",
+		terbayar: "115.000",
+		nominal: "115.000",
+		status: "Lunas",
 	},
 ];
 
@@ -30,6 +34,7 @@ export default function PaymentHistory() {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const queryPage = parseInt(searchParams.get("page") || "1", 10);
 	const querySearch = searchParams.get("search") || "";
+	const { id } = useParams();
 
 	const [searchTerm, setSearchTerm] = useState(querySearch);
 	const [currentPage, setCurrentPage] = useState(queryPage);
@@ -50,9 +55,9 @@ export default function PaymentHistory() {
 	const filteredRumah = useMemo(() => {
 		return rumah.filter(
 			(r) =>
-				r.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-				r.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-				r.penghuni.toLowerCase().includes(searchTerm.toLowerCase()) ||
+				r.tanggal.toLowerCase().includes(searchTerm.toLowerCase()) ||
+				r.terbayar.toLowerCase().includes(searchTerm.toLowerCase()) ||
+				r.nominal.toLowerCase().includes(searchTerm.toLowerCase()) ||
 				r.status.toLowerCase().includes(searchTerm.toLowerCase())
 		);
 	}, [rumah, searchTerm]);
@@ -85,15 +90,10 @@ export default function PaymentHistory() {
 				<TableHeader>
 					<TableRow className="bg-gray-100 dark:bg-gray-700 dark:text-white">
 						<TableHead className="px-4 py-2 text-left">#</TableHead>
-						<TableHead className="px-4 py-2 text-left">
-							Tanggal
-						</TableHead>
-						<TableHead className="px-4 py-2 text-left">
-							Jenis
-						</TableHead>
-						<TableHead className="px-4 py-2 text-left">
-							Nominal
-						</TableHead>
+						<TableHead className="px-4 py-2 text-left">Tanggal</TableHead>
+						<TableHead className="px-4 py-2 text-left">Terbayar</TableHead>
+						<TableHead className="px-4 py-2 text-left">Nominal</TableHead>
+						<TableHead className="px-4 py-2 text-left">Status</TableHead>
 					</TableRow>
 				</TableHeader>
 				<TableBody>
@@ -106,10 +106,18 @@ export default function PaymentHistory() {
 								{r.tanggal}
 							</TableCell>
 							<TableCell className="whitespace-nowrap px-4 py-2">
-								{r.jenis}
+								{r.terbayar}
 							</TableCell>
 							<TableCell className="whitespace-nowrap px-4 py-2">
 								{r.nominal}
+							</TableCell>
+							<TableCell className="whitespace-nowrap px-4 py-2">
+								<span
+									className={
+										r.status === "Lunas" ? "text-green-500" : "text-red-500"
+									}>
+									{r.status}
+								</span>
 							</TableCell>
 						</TableRow>
 					))}
@@ -144,6 +152,12 @@ export default function PaymentHistory() {
 					</nav>
 				</div>
 			)}
+
+			<div className="flex justify-end mt-4 gap-3">
+				<Link to={`/rumah/${id}`}>
+					<Button className="">Kembali</Button>
+				</Link>
+			</div>
 		</div>
 	);
 }

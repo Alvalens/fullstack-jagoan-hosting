@@ -3,7 +3,7 @@ import {
 	Home,
 	Settings,
 	Users,
-  HomeIcon
+  LucideHome
 } from "lucide-react";
 
 import {
@@ -17,6 +17,7 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { DollarSign } from "lucide-react";
 
 const menuItems = [
 	{
@@ -35,7 +36,12 @@ const menuItems = [
       {
         title: "Rumah",
         url: "/rumah",
-        icon: HomeIcon,
+        icon: LucideHome,
+      },
+      {
+        title: "Pembayaran",
+        url: "/pembayaran",
+        icon: DollarSign,
       },
 		],
 	},
