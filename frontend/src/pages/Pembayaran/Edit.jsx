@@ -18,8 +18,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ComboboxDemo } from "../Rumah/Show/components/combobox";
 
 const jenis_pembayaran = ["pemasukan", "pengeluaran"];
-const jenis_pemasukan = ["iuran_kebersihan", "iuran_keamanan"];
-const jenis_pengeluaran = ["gaji", "listrik", "perbaikan jalan"];
+const jenis_pemasukan = ["iuran kebersihan", "iuran keamanan"];
+const jenis_pengeluaran = [
+	"gaji satpam",
+	"listrik satpam",
+	"perbaikan jalan",
+	"perbaikan selokan",
+	"lain-lain",
+];
 
 const pembayaranSchema = z.object({
 	nominal: z.string().min(1, "Nominal wajib diisi"),
