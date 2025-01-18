@@ -1,21 +1,22 @@
+import axiosInstance from "@/utils/axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { Navigate } from "react-router-dom";
 
-// Dummy data 
-const dummyUsers = [
-	{ id: 1, username: "admin", password: "admin123", role: "admin" },
-	{ id: 2, username: "user", password: "user123", role: "user" },
-];
 
 export const loginUser = createAsyncThunk(
 	"auth/login",
 	async ({ username, password }, { rejectWithValue }) => {
-		const user = dummyUsers.find(
-			(u) => u.username === username && u.password === password
-		);
-		if (user) {
-			return { id: user.id, username: user.username, role: user.role };
-		} else {
-			return rejectWithValue("Invalid username or password");
+		try {
+			const response = await axiosInstance.post("/login", {
+				username,
+				password,
+			});
+			localStorage.setItem("token", response.data.data.token);
+			return response.data.data.user; 
+		} catch (error) {
+			return rejectWithValue(
+				error.response?.data?.message || "Login failed"
+			);
 		}
 	}
 );
@@ -30,6 +31,9 @@ const authSlice = createSlice({
 	reducers: {
 		logout: (state) => {
 			state.user = null;
+			localStorage.removeItem("token");
+			localStorage.removeItem("user");
+			Navigate("/");
 		},
 	},
 	extraReducers: (builder) => {
