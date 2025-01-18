@@ -12,4 +12,14 @@ class HistoryPenghuni extends Model
         'tanggal_masuk',
         'tanggal_keluar',
     ];
+
+    public function penghuni()
+    {
+        return $this->belongsTo(Penghuni::class);
+    }
+
+    public function rumah()
+    {
+        return $this->belongsTo(Rumah::class);
+    }
 }

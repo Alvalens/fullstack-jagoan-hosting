@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,49 +18,49 @@ import {
 	PopoverTrigger,
 } from "@/components/ui/popover";
 
-// Updated Combobox to accept "currentValue" and "onSelect" props
-export function ComboboxDemo({ data, currentValue, onSelect }) {
+export function ComboboxDemo({
+	data,
+	currentValue,
+	onSelect,
+	disabled = false,
+}) {
 	const [open, setOpen] = React.useState(false);
 
-	// Convert currentValue to label, if found
 	const selectedLabel =
 		data.find((item) => item.value === currentValue)?.label || "";
 
 	return (
-		<Popover open={open} onOpenChange={setOpen}>
+		<Popover open={disabled ? false : open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
 				<Button
 					variant="outline"
 					role="combobox"
 					aria-expanded={open}
-					className="w-[200px] justify-between">
-					{selectedLabel || "Select penghuni..."}
+					disabled={disabled}
+					className="w-full justify-between">
+					{selectedLabel || "Pilih penghuni..."}
 					<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent className="w-[200px] p-0">
+			<PopoverContent className="w-[300px] p-0">
 				<Command>
-					<CommandInput placeholder="Search penghuni..." />
+					<CommandInput placeholder="Cari penghuni..." />
 					<CommandList>
-						<CommandEmpty>No data found.</CommandEmpty>
+						<CommandEmpty>Tidak ada data.</CommandEmpty>
 						<CommandGroup>
 							{data.map((item) => (
 								<CommandItem
 									key={item.value}
-									value={item.value}
-									onSelect={(val) => {
-										// If the user reselects the same value, clear it
-										const newVal =
-											val === currentValue ? "" : val;
-										onSelect(newVal);
+									// Use the label as the searchable value here:
+									value={item.label}
+									onSelect={() => {
+										onSelect(item.value);
 										setOpen(false);
 									}}>
 									<Check
 										className={cn(
 											"mr-2 h-4 w-4",
-											currentValue === item.value
-												? "opacity-100"
-												: "opacity-0"
+											currentValue === item.value ? "opacity-100" : "opacity-0"
 										)}
 									/>
 									{item.label}

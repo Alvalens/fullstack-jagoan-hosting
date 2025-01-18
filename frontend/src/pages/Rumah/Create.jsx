@@ -12,13 +12,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import toast from "react-hot-toast";
+import axiosInstance from "@/utils/axios";
+import { useNavigate } from "react-router-dom";
 
 const rumahSchema = z.object({
-	name: z.string().min(1, "Nama rumah wajib diisi"),
-	address: z.string().min(1, "Alamat wajib diisi"),
-	status: z.enum(["dihuni", "tidak dihuni"], "Pilih status rumah"),
+	nama: z.string().min(1, "Nama rumah wajib diisi"),
+	alamat: z.string().min(1, "Alamat wajib diisi"),
+	status_rumah: z.enum(["kosong", "dihuuni"], "Pilih status rumah"),
 });
-
 
 export default function CreateRumah() {
 	const {
@@ -30,9 +31,31 @@ export default function CreateRumah() {
 		resolver: zodResolver(rumahSchema),
 	});
 
-	const onSubmit = (data) => {
-		console.log("Form Data:", data);
-		toast.success("Rumah berhasil ditambahkan");
+	const navigate = useNavigate();
+
+	const onSubmit = async (data) => {
+		try {
+			// Send data to API
+			const response = await axiosInstance.post("/rumahs", data, {
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+
+			if (response.data.status === "success") {
+				toast.success("Rumah berhasil ditambahkan");
+				navigate("/rumah");
+			}
+		} catch (error) {
+			toast.error("Gagal menambahkan rumah");
+			if (error.response.status === 422) {
+				if (error.response.data.errors) {
+					Object.entries(error.response.data.errors).forEach(([key, value]) => {
+						toast.error(`${key}: ${value}`);
+					});
+				}
+			}
+		}
 	};
 
 	return (
@@ -41,54 +64,47 @@ export default function CreateRumah() {
 			<form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 				{/* Nama Rumah */}
 				<div>
-					<Label htmlFor="name">Nama Rumah</Label>
+					<Label htmlFor="nama">Nama Rumah</Label>
 					<Input
-						id="name"
-						{...register("name")}
+						id="nama"
+						{...register("nama")}
 						placeholder="Masukkan nama rumah"
 						className="mt-2"
 					/>
-					{errors.name && (
-						<p className="text-red-500 text-sm mt-1">
-							{errors.name.message}
-						</p>
+					{errors.nama && (
+						<p className="text-red-500 text-sm mt-1">{errors.nama.message}</p>
 					)}
 				</div>
 
 				{/* Alamat */}
 				<div>
-					<Label htmlFor="address">Alamat</Label>
+					<Label htmlFor="alamat">Alamat</Label>
 					<Input
-						id="address"
-						{...register("address")}
+						id="alamat"
+						{...register("alamat")}
 						placeholder="Masukkan alamat"
 						className="mt-2"
 					/>
-					{errors.address && (
-						<p className="text-red-500 text-sm mt-1">
-							{errors.address.message}
-						</p>
+					{errors.alamat && (
+						<p className="text-red-500 text-sm mt-1">{errors.alamat.message}</p>
 					)}
 				</div>
 
-				{/* Status */}
+				{/* Status Rumah */}
 				<div>
-					<Label>Status</Label>
-					<Select
-						onValueChange={(value) => setValue("status", value)}>
+					<Label>Status Rumah</Label>
+					<Select onValueChange={(value) => setValue("status_rumah", value)}>
 						<SelectTrigger>
 							<SelectValue placeholder="Pilih status rumah" />
 						</SelectTrigger>
 						<SelectContent>
-							<SelectItem value="dihuni">Dihuni</SelectItem>
-							<SelectItem value="tidak dihuni">
-								Tidak Dihuni
-							</SelectItem>
+							<SelectItem value="kosong">Kosong</SelectItem>
+							<SelectItem value="dihuuni">Dihuni</SelectItem>
 						</SelectContent>
 					</Select>
-					{errors.status && (
+					{errors.status_rumah && (
 						<p className="text-red-500 text-sm mt-1">
-							{errors.status.message}
+							{errors.status_rumah.message}
 						</p>
 					)}
 				</div>

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->string('alamat');
-            $table->enum('status_rumah', ['kosong', 'dihuuni']);
+            $table->enum('status_rumah', ['kosong', 'dihuni']);
             $table->timestamps();
         });
     }

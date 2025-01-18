@@ -14,7 +14,7 @@ import { z } from "zod";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import axiosInstance from "@/utils/axios";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const penghuniSchema = z.object({
 	namaLengkap: z.string().min(1, "Nama lengkap wajib diisi"),
@@ -37,6 +37,7 @@ export default function CreatePenghuni() {
 	});
 
 	const [fotoPreview, setFotoPreview] = useState(null);
+	const navigate = useNavigate();
 
 	const onSubmit = async (data) => {
 		try {
@@ -57,7 +58,10 @@ export default function CreatePenghuni() {
 
 			if (response.data.status === "success") {
 				toast.success("Penghuni berhasil ditambahkan");
-				Navigate("/penghuni");
+				// delay 1s to wait for the toast to disappear
+				setTimeout(() => {
+					navigate("/penghuni");
+				}, 1000);
 			}
 		} catch (error) {
 			toast.error("Gagal menambahkan penghuni");

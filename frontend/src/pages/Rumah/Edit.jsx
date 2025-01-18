@@ -13,43 +13,72 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import axiosInstance from "@/utils/axios";
+import { useParams, useNavigate } from "react-router-dom";
 
-// Adjust the schema to match the new record fields
 const rumahSchema = z.object({
-	name: z.string().min(1, "Nama rumah wajib diisi"),
-	address: z.string().min(1, "Alamat wajib diisi"),
-	status: z.enum(["dihuni", "tidak dihuni"], "Pilih status rumah"),
+	nama: z.string().min(1, "Nama rumah wajib diisi"),
+	alamat: z.string().min(1, "Alamat wajib diisi"),
+	status_rumah: z.enum(["kosong", "dihuuni"], "Pilih status rumah"),
 });
 
-// Example existing data for editing
-const mockData = {
-	name: "Rumah 1",
-	address: "Jl. Raya",
-	status: "tidak dihuni",
-};
-
-
 export default function EditRumah() {
+	const { id } = useParams();
+	const navigate = useNavigate();
 	const {
 		register,
 		handleSubmit,
 		setValue,
+		watch,
 		formState: { errors },
 	} = useForm({
 		resolver: zodResolver(rumahSchema),
-		defaultValues: mockData,
 	});
 
-	// Load existing data into form
-	useEffect(() => {
-		setValue("name", mockData.name);
-		setValue("address", mockData.address);
-		setValue("status", mockData.status);
-	}, [setValue]);
+	const [defaultStatusRumah, setDefaultStatusRumah] = useState("");
 
-	const onSubmit = (data) => {
-		console.log("Form Data:", data);
-		toast.success("Data rumah berhasil diperbarui");
+	useEffect(() => {
+		const fetchRumah = async () => {
+			try {
+				const response = await axiosInstance.get(`/rumahs/${id}`);
+				const rumah = response.data.data;
+
+				setValue("nama", rumah.nama);
+				setValue("alamat", rumah.alamat);
+				setValue("status_rumah", rumah.status_rumah);
+				setDefaultStatusRumah(rumah.status_rumah);
+			} catch (error) {
+				toast.error("Gagal memuat data rumah");
+				console.error("Error fetching rumah data", error);
+			}
+		};
+
+		fetchRumah();
+	}, [id, setValue]);
+
+	const onSubmit = async (data) => {
+		try {
+			// Send data to API
+			const response = await axiosInstance.put(`/rumahs/${id}`, data, {
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+
+			if (response.data.status === "success") {
+				toast.success("Rumah berhasil diperbarui");
+				navigate("/rumah");
+			}
+		} catch (error) {
+			toast.error("Gagal memperbarui rumah");
+			if (error.response.status === 422) {
+				if (error.response.data.errors) {
+					Object.entries(error.response.data.errors).forEach(([key, value]) => {
+						toast.error(`${key}: ${value}`);
+					});
+				}
+			}
+		}
 	};
 
 	return (
@@ -58,55 +87,50 @@ export default function EditRumah() {
 			<form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 				{/* Nama Rumah */}
 				<div>
-					<Label htmlFor="name">Nama Rumah</Label>
+					<Label htmlFor="nama">Nama Rumah</Label>
 					<Input
-						id="name"
-						{...register("name")}
+						id="nama"
+						{...register("nama")}
 						placeholder="Masukkan nama rumah"
 						className="mt-2"
 					/>
-					{errors.name && (
-						<p className="text-red-500 text-sm mt-1">
-							{errors.name.message}
-						</p>
+					{errors.nama && (
+						<p className="text-red-500 text-sm mt-1">{errors.nama.message}</p>
 					)}
 				</div>
 
 				{/* Alamat */}
 				<div>
-					<Label htmlFor="address">Alamat</Label>
+					<Label htmlFor="alamat">Alamat</Label>
 					<Input
-						id="address"
-						{...register("address")}
+						id="alamat"
+						{...register("alamat")}
 						placeholder="Masukkan alamat"
 						className="mt-2"
 					/>
-					{errors.address && (
-						<p className="text-red-500 text-sm mt-1">
-							{errors.address.message}
-						</p>
+					{errors.alamat && (
+						<p className="text-red-500 text-sm mt-1">{errors.alamat.message}</p>
 					)}
 				</div>
 
-				{/* Status */}
+				{/* Status Rumah */}
 				<div>
-					<Label>Status</Label>
+					<Label>Status Rumah</Label>
 					<Select
-						onValueChange={(value) => setValue("status", value)}
-						value={mockData.status}>
+						value={watch("status_rumah") || defaultStatusRumah}
+						defaultValue={defaultStatusRumah}
+						onValueChange={(value) => setValue("status_rumah", value)}>
 						<SelectTrigger>
 							<SelectValue placeholder="Pilih status rumah" />
 						</SelectTrigger>
 						<SelectContent>
-							<SelectItem value="dihuni">Dihuni</SelectItem>
-							<SelectItem value="tidak dihuni">
-								Tidak Dihuni
-							</SelectItem>
+							<SelectItem value="kosong">Kosong</SelectItem>
+							<SelectItem value="dihuuni">Dihuni</SelectItem>
 						</SelectContent>
 					</Select>
-					{errors.status && (
+					{errors.status_rumah && (
 						<p className="text-red-500 text-sm mt-1">
-							{errors.status.message}
+							{errors.status_rumah.message}
 						</p>
 					)}
 				</div>

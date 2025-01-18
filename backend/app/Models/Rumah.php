@@ -11,4 +11,9 @@ class Rumah extends Model
         'alamat',
         'status_rumah',
     ];
+
+    public function historyPenghuni()
+    {
+        return $this->hasMany(HistoryPenghuni::class);
+    }
 }

@@ -13,4 +13,9 @@ class Penghuni extends Model
         'status_penghuni',
         'status_pernikahan',
     ];
+
+    public function historyPenghuni()
+    {
+        return $this->hasMany(HistoryPenghuni::class);
+    }
 }

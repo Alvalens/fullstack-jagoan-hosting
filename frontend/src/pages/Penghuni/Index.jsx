@@ -13,6 +13,7 @@ import { Pencil } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import axiosInstance from "@/utils/axios";
+import { showImage } from "@/lib/utils";
 
 export default function PenghuniIndex() {
 	const [penghuni, setPenghuni] = useState([]);
@@ -122,7 +123,7 @@ const fetchPenghuni = async () => {
 									{p.nama}
 								</TableCell>
 								<TableCell className="whitespace-nowrap px-4 py-2">
-									<img src={p.ktp} alt="KTP" className="w-12 h-12 rounded" />
+									<img src={showImage(p.ktp)} alt="KTP" className="w-12 h-12 rounded" />
 								</TableCell>
 								<TableCell className="whitespace-nowrap px-4 py-2">
 									{p.status_penghuni}
