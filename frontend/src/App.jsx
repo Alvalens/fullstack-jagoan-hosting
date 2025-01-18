@@ -14,6 +14,10 @@ import RumahShow from "./pages/Rumah/Show/Show";
 import RumahAddPenghuni from "./pages/Rumah/Show/AddPenghuni";
 import PaymentHistory from "./pages/Rumah/Show/PaymentHistory";
 import PenghuniHistory from "./pages/Rumah/Show/PenghuniHistory";
+import PembayaranIndex from "./pages/Pembayaran/Index";
+import PembayaranCreate from "./pages/Pembayaran/Create";
+import PembayaranEdit from "./pages/Pembayaran/Edit";
+import PembayaranShow from "./pages/Pembayaran/Show";
 
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
@@ -48,6 +52,11 @@ function InnerApp() {
         <Route path="/rumah/:id/add-penghuni" element={<RumahAddPenghuni />} />
 				<Route path="/rumah/:id/history-pembayaran" element={<PaymentHistory />} />
 				<Route path="/rumah/:id/history-penghuni" element={<PenghuniHistory />} />
+
+				<Route path="/pembayaran" element={<PembayaranIndex />} />
+				<Route path="/pembayaran/create" element={<PembayaranCreate />} />
+				<Route path="/pembayaran/:id/edit" element={<PembayaranEdit />} />
+				<Route path="/pembayaran/:id" element={<PembayaranShow />} />
 
 			</Route>
 
