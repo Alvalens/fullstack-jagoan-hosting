@@ -2,6 +2,8 @@ import React from "react";
 import Layout from "./components/Layout/Layout";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import PrivateRoute from "./utils/PrivateRoute";
+import { Chart as ChartJS, registerables } from "chart.js";
+
 import Login from "./pages/Auth/Login";
 import PenghuniIndex from "./pages/Penghuni/Index";
 import PenghuniCreate from "./pages/Penghuni/Create";
@@ -13,11 +15,14 @@ import RumahEdit from "./pages/Rumah/Edit";
 import RumahShow from "./pages/Rumah/Show/Show";
 import RumahAddPenghuni from "./pages/Rumah/Show/AddPenghuni";
 import PaymentHistory from "./pages/Rumah/Show/PaymentHistory";
+
 import PenghuniHistory from "./pages/Rumah/Show/PenghuniHistory";
 import PembayaranIndex from "./pages/Pembayaran/Index";
 import PembayaranCreate from "./pages/Pembayaran/Create";
 import PembayaranEdit from "./pages/Pembayaran/Edit";
 import PembayaranShow from "./pages/Pembayaran/Show";
+
+import LaporanIndex from "./pages/Laporan/Index";
 
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
@@ -58,6 +63,8 @@ function InnerApp() {
 				<Route path="/pembayaran/:id/edit" element={<PembayaranEdit />} />
 				<Route path="/pembayaran/:id" element={<PembayaranShow />} />
 
+				<Route path="/laporan" element={<LaporanIndex />} />
+
 			</Route>
 
 			{/* 404 Route */}
@@ -79,5 +86,5 @@ function App() {
 		</Provider>
 	);
 }
-
+ChartJS.register(...registerables);
 export default App;

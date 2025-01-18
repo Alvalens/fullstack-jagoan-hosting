@@ -3,7 +3,8 @@ import {
 	Home,
 	Settings,
 	Users,
-  LucideHome
+  LucideHome,
+	Receipt
 } from "lucide-react";
 
 import {
@@ -43,6 +44,11 @@ const menuItems = [
         url: "/pembayaran",
         icon: DollarSign,
       },
+			{
+				title: "Laporan",
+				url: "/laporan",
+				icon: Receipt,
+			},
 		],
 	},
 	{
