@@ -1,6 +1,5 @@
 import axiosInstance from "@/utils/axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { Navigate } from "react-router-dom";
 
 
 export const loginUser = createAsyncThunk(
@@ -33,7 +32,6 @@ const authSlice = createSlice({
 			state.user = null;
 			localStorage.removeItem("token");
 			localStorage.removeItem("user");
-			Navigate("/");
 		},
 	},
 	extraReducers: (builder) => {

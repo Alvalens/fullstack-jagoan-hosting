@@ -13,29 +13,24 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import axiosInstance from "@/utils/axios";
+import { useParams, useNavigate } from "react-router-dom";
+import { showImage } from "@/lib/utils";
 
 const penghuniSchema = z.object({
 	namaLengkap: z.string().min(1, "Nama lengkap wajib diisi"),
 	fotoKTP: z
 		.instanceof(File)
-		.refine(
-			(file) => file.size < 5 * 1024 * 1024,
-			"Ukuran file maksimal 5MB"
-		),
+		.refine((file) => file.size < 5 * 1024 * 1024, "Ukuran file maksimal 5MB")
+		.optional(),
 	statusPenghuni: z.enum(["kontrak", "tetap"], "Pilih status penghuni"),
 	nomorTelepon: z.string().regex(/^08\d{8,11}$/, "Nomor telepon tidak valid"),
 	statusPernikahan: z.enum(["sudah", "belum"], "Pilih status pernikahan"),
 });
 
-const mockData = {
-	namaLengkap: "John Doe",
-	fotoKTP: null, // Replace with actual file or null for no initial image
-	statusPenghuni: "kontrak",
-	nomorTelepon: "08123456789",
-	statusPernikahan: "sudah",
-};
-
 export default function EditPenghuni() {
+	const { id } = useParams();
+	const navigate = useNavigate();
 	const {
 		register,
 		handleSubmit,
@@ -43,27 +38,66 @@ export default function EditPenghuni() {
 		formState: { errors },
 	} = useForm({
 		resolver: zodResolver(penghuniSchema),
-		defaultValues: mockData,
 	});
 
 	const [fotoPreview, setFotoPreview] = useState(null);
 
-	// Set initial values
 	useEffect(() => {
-		if (mockData.fotoKTP) {
-			setFotoPreview(URL.createObjectURL(mockData.fotoKTP));
+		const fetchPenghuni = async () => {
+			try {
+				const response = await axiosInstance.get(`/penghunis/${id}`);
+				const penghuni = response.data.data;
+
+				setValue("namaLengkap", penghuni.nama);
+				setValue("statusPenghuni", penghuni.status_penghuni);
+				setValue("nomorTelepon", penghuni.no_hp);
+				setValue("statusPernikahan", penghuni.status_pernikahan);
+
+				if (penghuni.ktp) {
+					setFotoPreview(penghuni.ktp);
+				}
+			} catch (error) {
+				toast.error("Gagal memuat data penghuni");
+				console.error("Error fetching penghuni data", error);
+			}
+		};
+
+		fetchPenghuni();
+	}, [id, setValue]);
+
+	const onSubmit = async (data) => {
+		try {
+			// Create FormData to handle file upload
+			const formData = new FormData();
+			formData.append("nama", data.namaLengkap);
+			if (data.fotoKTP) {
+				formData.append("ktp", data.fotoKTP);
+			}
+			formData.append("no_hp", data.nomorTelepon);
+			formData.append("status_penghuni", data.statusPenghuni);
+			formData.append("status_pernikahan", data.statusPernikahan);
+
+			// Send data to API
+			const response = await axiosInstance.post(`/penghunis/${id}`, formData, {
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+			});
+
+			if (response.data.status === "success") {
+				toast.success("Penghuni berhasil diperbarui");
+				navigate("/penghuni");
+			}
+		} catch (error) {
+			toast.error("Gagal memperbarui penghuni");
+			if (error.response.status === 422) {
+				if (error.response.data.errors) {
+					Object.entries(error.response.data.errors).forEach(([key, value]) => {
+						toast.error(`${key}: ${value}`);
+					});
+				}
+			}
 		}
-
-		// Initialize values in the form
-		setValue("namaLengkap", mockData.namaLengkap);
-		setValue("statusPenghuni", mockData.statusPenghuni);
-		setValue("nomorTelepon", mockData.nomorTelepon);
-		setValue("statusPernikahan", mockData.statusPernikahan);
-	}, [setValue]);
-
-	const onSubmit = (data) => {
-		console.log("Form Data:", data);
-		toast.success("Data penghuni berhasil diperbarui");
 	};
 
 	const handleFileUpload = (e) => {
@@ -75,7 +109,7 @@ export default function EditPenghuni() {
 	};
 
 	return (
-		<div className="mx-auto p-6 bg-whitrounded-lg shadow">
+		<div className="mx-auto p-6 bg-white rounded-lg shadow">
 			<h1 className="text-2xl font-bold mb-4">Edit Penghuni</h1>
 			<form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 				{/* Nama Lengkap */}
@@ -106,7 +140,7 @@ export default function EditPenghuni() {
 					/>
 					{fotoPreview && (
 						<img
-							src={fotoPreview}
+							src={showImage(fotoPreview)}
 							alt="Preview KTP"
 							className="mt-2 w-32 h-32 object-cover rounded"
 						/>
@@ -121,11 +155,7 @@ export default function EditPenghuni() {
 				{/* Status Penghuni */}
 				<div>
 					<Label>Status Penghuni</Label>
-					<Select
-						value={mockData.statusPenghuni}
-						onValueChange={(value) =>
-							setValue("statusPenghuni", value)
-						}>
+					<Select onValueChange={(value) => setValue("statusPenghuni", value)}>
 						<SelectTrigger>
 							<SelectValue placeholder="Pilih status penghuni" />
 						</SelectTrigger>
@@ -161,10 +191,7 @@ export default function EditPenghuni() {
 				<div>
 					<Label>Status Pernikahan</Label>
 					<Select
-						value={mockData.statusPernikahan}
-						onValueChange={(value) =>
-							setValue("statusPernikahan", value)
-						}>
+						onValueChange={(value) => setValue("statusPernikahan", value)}>
 						<SelectTrigger>
 							<SelectValue placeholder="Pilih status pernikahan" />
 						</SelectTrigger>

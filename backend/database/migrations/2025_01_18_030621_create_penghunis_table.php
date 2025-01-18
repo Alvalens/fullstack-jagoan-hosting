@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('ktp');
             $table->string('no_hp');
             $table->enum('status_penghuni', ['tetap', 'kontrak']);
-            $table->enum('status_pernikahan', ['belum_menikah', 'menikah']);
+            $table->enum('status_pernikahan', ['belum', 'sudah']);
             $table->timestamps();
         });
     }

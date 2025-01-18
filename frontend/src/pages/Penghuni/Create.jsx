@@ -13,15 +13,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import axiosInstance from "@/utils/axios";
+import { Navigate } from "react-router-dom";
 
 const penghuniSchema = z.object({
 	namaLengkap: z.string().min(1, "Nama lengkap wajib diisi"),
 	fotoKTP: z
 		.instanceof(File)
-		.refine(
-			(file) => file.size < 5 * 1024 * 1024,
-			"Ukuran file maksimal 5MB"
-		),
+		.refine((file) => file.size < 5 * 1024 * 1024, "Ukuran file maksimal 5MB"),
 	statusPenghuni: z.enum(["kontrak", "tetap"], "Pilih status penghuni"),
 	nomorTelepon: z.string().regex(/^08\d{8,11}$/, "Nomor telepon tidak valid"),
 	statusPernikahan: z.enum(["sudah", "belum"], "Pilih status pernikahan"),
@@ -39,9 +38,37 @@ export default function CreatePenghuni() {
 
 	const [fotoPreview, setFotoPreview] = useState(null);
 
-	const onSubmit = (data) => {
-		console.log("Form Data:", data);
-		toast.success("Penghuni berhasil ditambahkan");
+	const onSubmit = async (data) => {
+		try {
+			// Create FormData to handle file upload
+			const formData = new FormData();
+			formData.append("nama", data.namaLengkap);
+			formData.append("ktp", data.fotoKTP);
+			formData.append("no_hp", data.nomorTelepon);
+			formData.append("status_penghuni", data.statusPenghuni);
+			formData.append("status_pernikahan", data.statusPernikahan);
+
+			// Send data to API
+			const response = await axiosInstance.post("/penghunis", formData, {
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+			});
+
+			if (response.data.status === "success") {
+				toast.success("Penghuni berhasil ditambahkan");
+				Navigate("/penghuni");
+			}
+		} catch (error) {
+			toast.error("Gagal menambahkan penghuni");
+			if (error.response.status === 422) {
+				if (error.response.data.errors) {
+					Object.entries(error.response.data.errors).forEach(([key, value]) => {
+						toast.error(`${key}: ${value}`);
+					});
+				}
+			}
+		}
 	};
 
 	const handleFileUpload = (e) => {
@@ -53,10 +80,8 @@ export default function CreatePenghuni() {
 	};
 
 	return (
-		<div className="mx-auto p-6 bg-whitrounded-lg shadow">
-			<h1 className="text-2xl font-bold mb-4">
-				Tambah Penghuni
-			</h1>
+		<div className="mx-auto p-6 bg-white rounded-lg shadow">
+			<h1 className="text-2xl font-bold mb-4">Tambah Penghuni</h1>
 			<form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 				{/* Nama Lengkap */}
 				<div>
@@ -101,10 +126,7 @@ export default function CreatePenghuni() {
 				{/* Status Penghuni */}
 				<div>
 					<Label>Status Penghuni</Label>
-					<Select
-						onValueChange={(value) =>
-							setValue("statusPenghuni", value)
-						}>
+					<Select onValueChange={(value) => setValue("statusPenghuni", value)}>
 						<SelectTrigger>
 							<SelectValue placeholder="Pilih status penghuni" />
 						</SelectTrigger>
@@ -140,9 +162,7 @@ export default function CreatePenghuni() {
 				<div>
 					<Label>Status Pernikahan</Label>
 					<Select
-						onValueChange={(value) =>
-							setValue("statusPernikahan", value)
-						}>
+						onValueChange={(value) => setValue("statusPernikahan", value)}>
 						<SelectTrigger>
 							<SelectValue placeholder="Pilih status pernikahan" />
 						</SelectTrigger>
