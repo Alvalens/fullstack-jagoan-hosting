@@ -19,7 +19,6 @@ Ensure the following tools are installed on your system:
    ```bash
    git clone https://github.com/Alvalens/fullstack-jagoan-hosting.git
    ```
-
 2. The repository should have the following structure:
 
    ```bash
@@ -37,19 +36,16 @@ Ensure the following tools are installed on your system:
    ```bash
    cd backend
    ```
-
 2. Install PHP dependencies:
 
    ```bash
    composer install
    ```
-
 3. Create a `.env` file:
 
    ```bash
    cp .env.example .env
    ```
-
 4. Configure the `.env` file:
 
    * Update the database credentials:
@@ -62,32 +58,27 @@ Ensure the following tools are installed on your system:
      DB_USERNAME=your_username
      DB_PASSWORD=your_password
      ```
-
    * Update sanctum stateful domain and cors allowed url
 
      ```bash
      SANCTUM_STATEFUL_DOMAINS=localhost
      CORS_ALLOWED_ORIGINS=http://localhost:5173
      ```
-
 5. Generate the application key:
 
    ```bash
    php artisan key:generate
    ```
-
 6. Run migrations and seeders (if applicable):
 
    ```bash
    php artisan migrate --seed
    ```
-
 7. Run storage link:
 
    ```
    php artisan storage:link
    ```
-
 8. Start the Laravel development server:
 
    Laravel backend will run on [http://127.0.0.1:8000]().
@@ -101,7 +92,6 @@ Ensure the following tools are installed on your system:
    ```bash
    cd ../frontend
    ```
-
 2. Install Node.js dependencies:
 
    ```bash
@@ -113,7 +103,6 @@ Ensure the following tools are installed on your system:
    ```bash
    npm install -g pnpm@latest-10
    ```
-
 3. Update the API base URL in the React configuration file, often located in `src/utils/axios.js` or `.env`:
 
    ```javascript
@@ -121,7 +110,6 @@ Ensure the following tools are installed on your system:
        baseURL: "http://127.0.0.1:8000/api",
    });
    ```
-
 4. Start the React development server:
 
    ```bash
@@ -143,7 +131,6 @@ If React cannot communicate with Laravel, ensure CORS is properly configured in 
    'allowed_methods' => ['*'],
    'allowed_origins' => explode(',', env('CORS_ALLOWED_ORIGINS', 'http://localhost:5173')),
    ```
-
 2. Restart the Laravel server:
 
    ```bash
@@ -158,18 +145,17 @@ Alternatively, set up a proxy in the React app by editing `vite.config.js`:
 ## **5. Testing the Fullstack Application**
 
 1. Start both servers:
+
    * Laravel backend:
 
      ```bash
      cd backend
      php artisan serve
      ```
-
    * React frontend:
-
    * ```bash
      cd ../frontend
      pnpm run dev
      ```
-
 2. Access the React app at [http://localhost:5173](), and test API calls to ensure everything works.
+3. Login with username `admin `and password `password`
