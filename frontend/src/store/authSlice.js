@@ -1,6 +1,5 @@
-import axiosInstance from "@/utils/axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
+import axiosInstance from "@/utils/axios";
 
 export const loginUser = createAsyncThunk(
 	"auth/login",
@@ -11,7 +10,7 @@ export const loginUser = createAsyncThunk(
 				password,
 			});
 			localStorage.setItem("token", response.data.data.token);
-			return response.data.data.user; 
+			return response.data.data.user;
 		} catch (error) {
 			return rejectWithValue(
 				error.response?.data?.message || "Login failed"
@@ -24,7 +23,7 @@ const authSlice = createSlice({
 	name: "auth",
 	initialState: {
 		user: null,
-		status: "idle", 
+		status: "idle",
 		error: null,
 	},
 	reducers: {

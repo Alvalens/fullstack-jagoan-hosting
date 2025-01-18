@@ -3,6 +3,7 @@ import Layout from "./components/Layout/Layout";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import PrivateRoute from "./utils/PrivateRoute";
 import { Chart as ChartJS, registerables } from "chart.js";
+import { logout } from "@/store/authSlice";
 
 import Login from "./pages/Auth/Login";
 import PenghuniIndex from "./pages/Penghuni/Index";
@@ -87,4 +88,10 @@ function App() {
 	);
 }
 ChartJS.register(...registerables);
+
+
+window.addEventListener("unauthorized", () => {
+	store.dispatch(logout());
+});
+
 export default App;
