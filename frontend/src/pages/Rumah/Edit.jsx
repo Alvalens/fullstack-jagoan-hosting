@@ -19,7 +19,7 @@ import { useParams, useNavigate } from "react-router-dom";
 const rumahSchema = z.object({
 	nama: z.string().min(1, "Nama rumah wajib diisi"),
 	alamat: z.string().min(1, "Alamat wajib diisi"),
-	status_rumah: z.enum(["kosong", "dihuuni"], "Pilih status rumah"),
+	status_rumah: z.enum(["kosong", "dihuni"], "Pilih status rumah"),
 });
 
 export default function EditRumah() {
@@ -125,7 +125,7 @@ export default function EditRumah() {
 						</SelectTrigger>
 						<SelectContent>
 							<SelectItem value="kosong">Kosong</SelectItem>
-							<SelectItem value="dihuuni">Dihuni</SelectItem>
+							<SelectItem value="dihuni">Dihuni</SelectItem>
 						</SelectContent>
 					</Select>
 					{errors.status_rumah && (

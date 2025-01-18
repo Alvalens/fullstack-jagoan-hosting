@@ -46,14 +46,13 @@ export default function AddPenghuni() {
 					axiosInstance.get("/search-penghuni"),
 				]);
 
-				// Handle existing penghuni data
 				if (existingResponse.data.data) {
 					setExistingPenghuni(existingResponse.data.data);
-					setValue("id_penghuni", existingResponse.data.data.penghuni_id);
+					setValue("id_penghuni", existingResponse.data.data.penghuni.id.toString());
 					setValue("tanggal_masuk", existingResponse.data.data.tanggal_masuk);
+
 				}
 
-				// Format penghuni options
 				const formattedOptions = penghuniResponse.data.map((penghuni) => ({
 					value: penghuni.id.toString(),
 					label: penghuni.nama,
@@ -72,7 +71,6 @@ export default function AddPenghuni() {
 	}, [id, setValue]);
 
 	const onSubmit = async (data) => {
-		console.log("onSubmit triggered with data:", data); // Debug log
 		try {
 			const response = await axiosInstance.post("/assign-penghuni", {
 				...data,
@@ -89,8 +87,6 @@ export default function AddPenghuni() {
 			toast.error(error.response?.data?.message || "Gagal menyimpan data");
 		}
 	};
-
-	const currentPenghuniValue = watch("id_penghuni");
 
 	if (isLoading) {
 		return <div>Loading...</div>;
@@ -115,7 +111,7 @@ export default function AddPenghuni() {
 					<label className="block text-sm">Pilih Penghuni</label>
 					<ComboboxDemo
 						data={penghuniOptions}
-						currentValue={currentPenghuniValue}
+						currentValue={watch("id_penghuni")}
 						onSelect={(selected) => setValue("id_penghuni", selected)}
 						disabled={Boolean(existingPenghuni)}
 					/>

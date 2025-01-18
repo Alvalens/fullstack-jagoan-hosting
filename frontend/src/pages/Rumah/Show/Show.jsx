@@ -24,7 +24,7 @@ export default function ShowRumah() {
 		try {
 			const response = await axiosInstance.get(`/rumahs/${id}`);
 			setRumah(response.data.data.rumah);
-			setPenghuni(response.data.data.penghuni);
+			setPenghuni(response.data.data.current_penghuni);
 		} catch (error) {
 			console.error("Error fetching rumah data", error);
 		}
@@ -70,24 +70,29 @@ export default function ShowRumah() {
 				<div className="flex items-center gap-2 text-md mb-2">
 					<User size={20} className="text-gray-600" />
 					<span>
-						<span className="font-bold">Nama Penghuni: </span> {penghuni?.nama ?? '-'}
+						<span className="font-bold">Nama Penghuni: </span>{" "}
+						{penghuni?.penghuni?.nama ?? "-"}
 					</span>
 				</div>
 				<div className="flex items-center gap-2 text-md mb-2">
 					<Briefcase size={20} className="text-gray-600" />
 					<span>
-						<span className="font-bold">Status: </span> {penghuni?.status ?? '-'}
+						<span className="font-bold">Status: </span>{" "}
+						{penghuni?.penghuni?.status_penghuni ?? "-"}
 					</span>
 				</div>
 				<div className="flex items-center gap-2 text-md mb-2">
 					<Heart size={20} className="text-gray-600" />
 					<span>
-						<span className="font-bold">Status Pernikahan:</span> {penghuni?.status_pernikahan ?? '-'}</span>
+						<span className="font-bold">Status Pernikahan:</span>{" "}
+						{penghuni?.penghuni?.status_pernikahan ?? "-"}
+					</span>
 				</div>
 				<div className="flex items-center gap-2 text-md">
 					<Calendar size={20} className="text-gray-600" />
 					<span>
-						<span className="font-bold">Tanggal Masuk:</span> {penghuni?.tanggal_masuk ?? '-'}
+						<span className="font-bold">Tanggal Masuk:</span>{" "}
+						{penghuni?.tanggal_masuk ?? "-"}
 					</span>
 				</div>
 

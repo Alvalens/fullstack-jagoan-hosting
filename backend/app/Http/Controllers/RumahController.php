@@ -58,7 +58,7 @@ class RumahController extends Controller
             $validated = $request->validate([
                 'nama' => 'required|string|max:255',
                 'alamat' => 'required|string|max:255',
-                'status_rumah' => 'required|in:kosong,dihuuni',
+                'status_rumah' => 'required|in:kosong,dihuni',
             ]);
 
             $rumah = Rumah::create($validated);
@@ -72,7 +72,7 @@ class RumahController extends Controller
             Log::error('Error creating rumah: ' . $e->getMessage());
             return response()->json([
                 'status' => 'error',
-                'message' => 'Failed to create rumah',
+                'message' => 'Failed to create rumah' . $e->getMessage(),
             ], 500);
         }
     }
@@ -117,7 +117,7 @@ class RumahController extends Controller
             $validated = $request->validate([
                 'nama' => 'required|string|max:255',
                 'alamat' => 'required|string|max:255',
-                'status_rumah' => 'required|in:kosong,dihuuni',
+                'status_rumah' => 'required|in:kosong,dihuni',
             ]);
 
             $rumah->update($validated);

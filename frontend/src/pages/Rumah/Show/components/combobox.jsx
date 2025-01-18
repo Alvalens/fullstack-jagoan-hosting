@@ -24,10 +24,12 @@ export function ComboboxDemo({
 	onSelect,
 	disabled = false,
 }) {
-	const [open, setOpen] = React.useState(false);
+const [open, setOpen] = React.useState(false);
 
-	const selectedLabel =
-		data.find((item) => item.value === currentValue)?.label || "";
+	const selectedLabel = data.find((item) => item.value === currentValue)?.label || "";
+	console.log("data:", data);
+	console.log("current:", currentValue);
+	console.log("Selected Label:", selectedLabel);
 
 	return (
 		<Popover open={disabled ? false : open} onOpenChange={setOpen}>
@@ -51,7 +53,6 @@ export function ComboboxDemo({
 							{data.map((item) => (
 								<CommandItem
 									key={item.value}
-									// Use the label as the searchable value here:
 									value={item.label}
 									onSelect={() => {
 										onSelect(item.value);
