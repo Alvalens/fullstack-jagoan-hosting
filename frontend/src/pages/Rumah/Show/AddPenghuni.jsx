@@ -128,7 +128,6 @@ export default function AddPenghuni() {
 						{...register("tanggal_masuk")}
 						type="date"
 						className="mt-2"
-						disabled={Boolean(existingPenghuni)}
 					/>
 					{errors.tanggal_masuk && (
 						<p className="text-red-500 text-sm mt-1">

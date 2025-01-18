@@ -74,8 +74,12 @@ export default function PaymentHistory() {
 								<TableHead className="px-4 py-2 text-left">#</TableHead>
 								<TableHead className="px-4 py-2 text-left">Tanggal</TableHead>
 								<TableHead className="px-4 py-2 text-left">Terbayar</TableHead>
-								<TableHead className="px-4 py-2 text-left">Nominal</TableHead>
-								<TableHead className="px-4 py-2 text-left">Lunas</TableHead>
+								<TableHead className="px-4 py-2 text-left">
+									Iuran Bulanan
+								</TableHead>
+								<TableHead className="px-4 py-2 text-left">
+									Status Lunas
+								</TableHead>
 							</TableRow>
 						</TableHeader>
 						<TableBody>
@@ -95,13 +99,20 @@ export default function PaymentHistory() {
 											{payment.tanggal}
 										</TableCell>
 										<TableCell className="whitespace-nowrap px-4 py-2">
-											{payment.terbayar}
+											Rp. {payment.terbayar.toLocaleString("id-ID")}
 										</TableCell>
 										<TableCell className="whitespace-nowrap px-4 py-2">
-											{payment.nominal}
+											Rp. {payment.nominal.toLocaleString("id-ID")}
 										</TableCell>
 										<TableCell className="whitespace-nowrap px-4 py-2">
-											{payment.lunas ? "Yes" : "No"}
+											<span
+												className={
+													payment.lunas
+														? "bg-green-100 text-green-800 py-1 px-2 rounded-md"
+														: "bg-red-100 text-red-800 py-1 px-2 rounded-md"
+												}>
+												{payment.lunas ? "lunas" : "Belum"}
+											</span>
 										</TableCell>
 									</TableRow>
 								))

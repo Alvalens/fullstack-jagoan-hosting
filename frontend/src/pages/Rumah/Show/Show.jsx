@@ -61,12 +61,13 @@ export default function ShowRumah() {
 			</div>
 
 			<div className="mx-auto p-6 bg-white rounded-lg shadow-md mt-5">
-				<h1 className="text-2xl font-bold mb-4 flex items-center">
+				<h1 className="text-2xl font-bold mb-0 flex items-center">
 					Detail Penghuni
 					<Link to="add-penghuni">
 						<PencilIcon className="ms-3 cursor-pointer" size={24} />
 					</Link>
 				</h1>
+				<p className="mb-5">Untuk menambah atau mengubah penghuni klik tombol pensil di atas.</p>
 				<div className="flex items-center gap-2 text-md mb-2">
 					<User size={20} className="text-gray-600" />
 					<span>

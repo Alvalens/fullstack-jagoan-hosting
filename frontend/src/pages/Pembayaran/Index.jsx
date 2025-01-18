@@ -123,7 +123,7 @@ export default function PembayaranIndex() {
 											{(currentPage - 1) * pembayaranPerPage + index + 1}
 										</TableCell>
 										<TableCell className="whitespace-nowrap px-4 py-2">
-											{r.nominal}
+											Rp. {r.nominal.toLocaleString("id-ID")}
 										</TableCell>
 										<TableCell className="whitespace-nowrap px-4 py-2">
 											<span

@@ -38,10 +38,14 @@ class AssignPenghuni extends Controller
 
         if ($existingPenghuni) {
             if (!$request->filled('tanggal_keluar')) {
+                $existingPenghuni->update([
+                    'tanggal_masuk' => $validated['tanggal_masuk']
+                ]);
+
                 return response()->json([
-                    'status' => 'error',
-                    'message' => 'Tanggal keluar harus diisi untuk mengganti penghuni'
-                ], 422);
+                    'status' => 'success',
+                    'message' => 'Tanggal masuk penghuni berhasil diupdate'
+                ]);
             }
 
             $existingPenghuni->update([
