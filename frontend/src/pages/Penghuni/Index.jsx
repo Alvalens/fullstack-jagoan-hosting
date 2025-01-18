@@ -8,8 +8,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { Trash2 } from "lucide-react";
-import { Pencil } from "lucide-react";
+import { Trash2, Pencil } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import axiosInstance from "@/utils/axios";
@@ -28,6 +27,7 @@ export default function PenghuniIndex() {
 	const querySearch = searchParams.get("search") || "";
 	const [searchTerm, setSearchTerm] = useState(querySearch);
 	const [currentPage, setCurrentPage] = useState(queryPage);
+	const [loading, setLoading] = useState(false);
 
 	const penghuniPerPage = 5;
 
@@ -35,22 +35,25 @@ export default function PenghuniIndex() {
 		fetchPenghuni();
 	}, [searchTerm, currentPage]);
 
-const fetchPenghuni = async () => {
-	try {
-		const response = await axiosInstance.get("/penghunis", {
-			params: {
-				nama: searchTerm,
-				status_penghuni: searchParams.get("status") || "",
-				page: currentPage,
-				per_page: penghuniPerPage, // Ensure this parameter is passed
-			},
-		});
-		setPenghuni(response.data.data.penghunis);
-		setPagination(response.data.pagination);
-	} catch (error) {
-		console.error("Error fetching penghuni data", error);
-	}
-};
+	const fetchPenghuni = async () => {
+		setLoading(true);
+		try {
+			const response = await axiosInstance.get("/penghunis", {
+				params: {
+					nama: searchTerm,
+					status_penghuni: searchParams.get("status") || "",
+					page: currentPage,
+					per_page: penghuniPerPage,
+				},
+			});
+			setPenghuni(response.data.data.penghunis);
+			setPagination(response.data.pagination);
+		} catch (error) {
+			console.error("Error fetching penghuni data", error);
+		} finally {
+			setLoading(false);
+		}
+	};
 
 	useEffect(() => {
 		const params = new URLSearchParams();
@@ -88,90 +91,102 @@ const fetchPenghuni = async () => {
 					}}
 				/>
 			</div>
-			<Table>
-				<TableHeader>
-					<TableRow className="bg-gray-100 dark:bg-gray-700 dark:text-white">
-						<TableHead className="px-4 py-2 text-left">#</TableHead>
-						<TableHead className="px-4 py-2 text-left">Nama Lengkap</TableHead>
-						<TableHead className="px-4 py-2 text-left">KTP</TableHead>
-						<TableHead className="px-4 py-2 text-left">
-							Status Penghuni
-						</TableHead>
-						<TableHead className="px-4 py-2 text-left">No Telp</TableHead>
-						<TableHead className="px-4 py-2 text-left">
-							Status Pernikahan
-						</TableHead>
-						<TableHead className="px-4 py-2 text-left">Actions</TableHead>
-					</TableRow>
-				</TableHeader>
-				<TableBody>
-					{penghuni.length === 0 ? (
-						<TableRow>
-							<TableCell colSpan={7} className="text-center py-4">
-								No penghuni found.
-							</TableCell>
-						</TableRow>
-					) : (
-						penghuni.map((p, index) => (
-							<TableRow key={p.id} className="dark:text-white">
-								<TableCell className="whitespace-nowrap px-4 py-2">
-									{(currentPage - 1) * penghuniPerPage + index + 1}
-								</TableCell>
-								<TableCell className="whitespace-nowrap px-4 py-2">
-									{p.nama}
-								</TableCell>
-								<TableCell className="whitespace-nowrap px-4 py-2">
-									<img src={showImage(p.ktp)} alt="KTP" className="w-12 h-12 rounded" />
-								</TableCell>
-								<TableCell className="whitespace-nowrap px-4 py-2">
-									{p.status_penghuni}
-								</TableCell>
-								<TableCell className="whitespace-nowrap px-4 py-2">
-									{p.no_telpon}
-								</TableCell>
-								<TableCell className="whitespace-nowrap px-4 py-2">
-									{p.status_pernikahan}
-								</TableCell>
-								<TableCell className="whitespace-nowrap px-4 py-2">
-									<div className="flex gap-2">
-										<Link
-											to={`${p.id}/edit`}
-											className="bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600">
-											<Pencil size={16} />
-										</Link>
-										<button
-											onClick={() => deletePenghuni(p.id)}
-											className="bg-red-500 text-white p-2 rounded hover:bg-red-600">
-											<Trash2 size={16} />
-										</button>
-									</div>
-								</TableCell>
+			{loading ? (
+				<div className="text-center py-4">Loading...</div>
+			) : (
+				<>
+					<Table>
+						<TableHeader>
+							<TableRow className="bg-gray-100 dark:bg-gray-700 dark:text-white">
+								<TableHead className="px-4 py-2 text-left">#</TableHead>
+								<TableHead className="px-4 py-2 text-left">
+									Nama Lengkap
+								</TableHead>
+								<TableHead className="px-4 py-2 text-left">KTP</TableHead>
+								<TableHead className="px-4 py-2 text-left">
+									Status Penghuni
+								</TableHead>
+								<TableHead className="px-4 py-2 text-left">No Telp</TableHead>
+								<TableHead className="px-4 py-2 text-left">
+									Status Pernikahan
+								</TableHead>
+								<TableHead className="px-4 py-2 text-left">Actions</TableHead>
 							</TableRow>
-						))
+						</TableHeader>
+						<TableBody>
+							{penghuni.length === 0 ? (
+								<TableRow>
+									<TableCell colSpan={7} className="text-center py-4">
+										No penghuni found.
+									</TableCell>
+								</TableRow>
+							) : (
+								penghuni.map((p, index) => (
+									<TableRow key={p.id} className="dark:text-white">
+										<TableCell className="whitespace-nowrap px-4 py-2">
+											{(currentPage - 1) * penghuniPerPage + index + 1}
+										</TableCell>
+										<TableCell className="whitespace-nowrap px-4 py-2">
+											{p.nama}
+										</TableCell>
+										<TableCell className="whitespace-nowrap px-4 py-2">
+											<img
+												src={showImage(p.ktp)}
+												alt="KTP"
+												className="w-12 h-12 rounded"
+											/>
+										</TableCell>
+										<TableCell className="whitespace-nowrap px-4 py-2">
+											{p.status_penghuni}
+										</TableCell>
+										<TableCell className="whitespace-nowrap px-4 py-2">
+											{p.no_telpon}
+										</TableCell>
+										<TableCell className="whitespace-nowrap px-4 py-2">
+											{p.status_pernikahan}
+										</TableCell>
+										<TableCell className="whitespace-nowrap px-4 py-2">
+											<div className="flex gap-2">
+												<Link
+													to={`${p.id}/edit`}
+													className="bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600">
+													<Pencil size={16} />
+												</Link>
+												<button
+													onClick={() => deletePenghuni(p.id)}
+													className="bg-red-500 text-white p-2 rounded hover:bg-red-600">
+													<Trash2 size={16} />
+												</button>
+											</div>
+										</TableCell>
+									</TableRow>
+								))
+							)}
+						</TableBody>
+					</Table>
+					{/* Pagination */}
+					{pagination.total > pagination.per_page && (
+						<div className="flex justify-center mt-4">
+							<nav>
+								<ul className="inline-flex -space-x-px">
+									{Array.from({ length: pagination.last_page }, (_, i) => (
+										<li key={i}>
+											<button
+												onClick={() => paginate(i + 1)}
+												className={`px-3 py-2 border ${
+													currentPage === i + 1
+														? "bg-blue-500 text-white"
+														: "bg-white text-gray-700"
+												} border-gray-300`}>
+												{i + 1}
+											</button>
+										</li>
+									))}
+								</ul>
+							</nav>
+						</div>
 					)}
-				</TableBody>
-			</Table>
-			{/* Pagination */}
-			{pagination.total > pagination.per_page && (
-				<div className="flex justify-center mt-4">
-					<nav>
-						<ul className="inline-flex -space-x-px">
-							{Array.from({ length: pagination.last_page }, (_, i) => (
-								<li key={i}>
-									<button
-										onClick={() => paginate(i + 1)}
-										className={`px-3 py-2 border ${
-											currentPage === i + 1
-												? "bg-blue-500 text-white"
-												: "bg-white text-gray-700"
-										} border-gray-300`}>
-										{i + 1}
-									</button>
-								</li>
-							))}
-						</ul>
-					</nav>
-				</div>
+				</>
 			)}
 		</div>
 	);

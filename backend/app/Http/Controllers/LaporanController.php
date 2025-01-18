@@ -12,7 +12,7 @@ class LaporanController extends Controller
         $startDate = $request->query('start_date');
         $endDate = $request->query('end_date');
 
-        $query = Pembayaran::query();
+        $query = Pembayaran::query()->with('penghuni', 'rumah');
 
         if ($startDate && $endDate) {
             $query->whereBetween('tanggal', [$startDate, $endDate]);

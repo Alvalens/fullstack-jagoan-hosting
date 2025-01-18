@@ -25,6 +25,7 @@ export default function PaymentHistory() {
 	const { id } = useParams();
 
 	const [currentPage, setCurrentPage] = useState(queryPage);
+	const [loading, setLoading] = useState(false);
 
 	const paymentsPerPage = 5;
 
@@ -33,6 +34,7 @@ export default function PaymentHistory() {
 	}, [currentPage]);
 
 	const fetchPayments = async () => {
+		setLoading(true);
 		try {
 			const response = await axiosInstance.get(`/history-pembayaran/${id}`, {
 				params: {
@@ -44,6 +46,8 @@ export default function PaymentHistory() {
 			setPagination(response.data.pagination);
 		} catch (error) {
 			console.error("Error fetching payment history data", error);
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -60,69 +64,74 @@ export default function PaymentHistory() {
 			<h1 className="text-2xl font-bold mb-4 dark:text-white">
 				History Pembayaran
 			</h1>
-			<Table>
-				<TableHeader>
-					<TableRow className="bg-gray-100 dark:bg-gray-700 dark:text-white">
-						<TableHead className="px-4 py-2 text-left">#</TableHead>
-						<TableHead className="px-4 py-2 text-left">Tanggal</TableHead>
-						<TableHead className="px-4 py-2 text-left">Terbayar</TableHead>
-						<TableHead className="px-4 py-2 text-left">Nominal</TableHead>
-						<TableHead className="px-4 py-2 text-left">Lunas</TableHead>
-					</TableRow>
-				</TableHeader>
-				<TableBody>
-					{payments.length === 0 ? (
-						<TableRow>
-							<TableCell colSpan={5} className="text-center py-4">
-								No payment history found.
-							</TableCell>
-						</TableRow>
-					) : (
-						payments.map((payment, index) => (
-							<TableRow key={index} className="dark:text-white">
-								<TableCell className="whitespace-nowrap px-4 py-2">
-									{(currentPage - 1) * paymentsPerPage + index + 1}
-								</TableCell>
-								<TableCell className="whitespace-nowrap px-4 py-2">
-									{payment.tanggal}
-								</TableCell>
-								<TableCell className="whitespace-nowrap px-4 py-2">
-									{payment.terbayar}
-								</TableCell>
-								<TableCell className="whitespace-nowrap px-4 py-2">
-									{payment.nominal}
-								</TableCell>
-								<TableCell className="whitespace-nowrap px-4 py-2">
-									{payment.lunas ? "Yes" : "No"}
-								</TableCell>
+			{loading ? (
+				<div className="text-center py-4">Loading...</div>
+			) : (
+				<>
+					<Table>
+						<TableHeader>
+							<TableRow className="bg-gray-100 dark:bg-gray-700 dark:text-white">
+								<TableHead className="px-4 py-2 text-left">#</TableHead>
+								<TableHead className="px-4 py-2 text-left">Tanggal</TableHead>
+								<TableHead className="px-4 py-2 text-left">Terbayar</TableHead>
+								<TableHead className="px-4 py-2 text-left">Nominal</TableHead>
+								<TableHead className="px-4 py-2 text-left">Lunas</TableHead>
 							</TableRow>
-						))
+						</TableHeader>
+						<TableBody>
+							{payments.length === 0 ? (
+								<TableRow>
+									<TableCell colSpan={5} className="text-center py-4">
+										No payment history found.
+									</TableCell>
+								</TableRow>
+							) : (
+								payments.map((payment, index) => (
+									<TableRow key={index} className="dark:text-white">
+										<TableCell className="whitespace-nowrap px-4 py-2">
+											{(currentPage - 1) * paymentsPerPage + index + 1}
+										</TableCell>
+										<TableCell className="whitespace-nowrap px-4 py-2">
+											{payment.tanggal}
+										</TableCell>
+										<TableCell className="whitespace-nowrap px-4 py-2">
+											{payment.terbayar}
+										</TableCell>
+										<TableCell className="whitespace-nowrap px-4 py-2">
+											{payment.nominal}
+										</TableCell>
+										<TableCell className="whitespace-nowrap px-4 py-2">
+											{payment.lunas ? "Yes" : "No"}
+										</TableCell>
+									</TableRow>
+								))
+							)}
+						</TableBody>
+					</Table>
+					{/* Pagination */}
+					{pagination.total > pagination.per_page && (
+						<div className="flex justify-center mt-4">
+							<nav>
+								<ul className="inline-flex -space-x-px">
+									{Array.from({ length: pagination.last_page }, (_, i) => (
+										<li key={i}>
+											<button
+												onClick={() => paginate(i + 1)}
+												className={`px-3 py-2 border ${
+													currentPage === i + 1
+														? "bg-blue-500 text-white"
+														: "bg-white text-gray-700"
+												} border-gray-300`}>
+												{i + 1}
+											</button>
+										</li>
+									))}
+								</ul>
+							</nav>
+						</div>
 					)}
-				</TableBody>
-			</Table>
-			{/* Pagination */}
-			{pagination.total > pagination.per_page && (
-				<div className="flex justify-center mt-4">
-					<nav>
-						<ul className="inline-flex -space-x-px">
-							{Array.from({ length: pagination.last_page }, (_, i) => (
-								<li key={i}>
-									<button
-										onClick={() => paginate(i + 1)}
-										className={`px-3 py-2 border ${
-											currentPage === i + 1
-												? "bg-blue-500 text-white"
-												: "bg-white text-gray-700"
-										} border-gray-300`}>
-										{i + 1}
-									</button>
-								</li>
-							))}
-						</ul>
-					</nav>
-				</div>
+				</>
 			)}
-
 			<div className="flex justify-end mt-4 gap-3">
 				<Link to={`/rumah/${id}`}>
 					<Button className="">Kembali</Button>

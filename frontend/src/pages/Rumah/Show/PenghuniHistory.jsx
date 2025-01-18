@@ -27,6 +27,7 @@ export default function PenghuniHistory() {
 	const querySearch = searchParams.get("search") || "";
 	const [searchTerm, setSearchTerm] = useState(querySearch);
 	const [currentPage, setCurrentPage] = useState(queryPage);
+	const [loading, setLoading] = useState(false);
 
 	const historyPerPage = 5;
 
@@ -35,6 +36,7 @@ export default function PenghuniHistory() {
 	}, [searchTerm, currentPage]);
 
 	const fetchHistory = async () => {
+		setLoading(true);
 		try {
 			const response = await axiosInstance.get(`/history-penghuni/${id}`, {
 				params: {
@@ -47,6 +49,8 @@ export default function PenghuniHistory() {
 			setPagination(response.data.pagination);
 		} catch (error) {
 			console.error("Error fetching history data", error);
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -76,67 +80,74 @@ export default function PenghuniHistory() {
 					}}
 				/>
 			</div>
-			<Table>
-				<TableHeader>
-					<TableRow className="bg-gray-100 dark:bg-gray-700 dark:text-white">
-						<TableHead className="px-4 py-2 text-left">#</TableHead>
-						<TableHead className="px-4 py-2 text-left">Nama</TableHead>
-						<TableHead className="px-4 py-2 text-left">Tanggal Mulai</TableHead>
-						<TableHead className="px-4 py-2 text-left">
-							Tanggal Selesai
-						</TableHead>
-					</TableRow>
-				</TableHeader>
-				<TableBody>
-					{history.length === 0 ? (
-						<TableRow>
-							<TableCell colSpan={4} className="text-center py-4">
-								No history found.
-							</TableCell>
-						</TableRow>
-					) : (
-						history.map((r, index) => (
-							<TableRow key={r.id} className="dark:text-white">
-								<TableCell className="whitespace-nowrap px-4 py-2">
-									{(currentPage - 1) * historyPerPage + index + 1}
-								</TableCell>
-								<TableCell className="whitespace-nowrap px-4 py-2">
-									{r.penghuni.nama}
-								</TableCell>
-								<TableCell className="whitespace-nowrap px-4 py-2">
-									{r.tanggal_masuk}
-								</TableCell>
-								<TableCell className="whitespace-nowrap px-4 py-2">
-									{r.tanggal_keluar || "N/A"}
-								</TableCell>
+			{loading ? (
+				<div className="text-center py-4">Loading...</div>
+			) : (
+				<>
+					<Table>
+						<TableHeader>
+							<TableRow className="bg-gray-100 dark:bg-gray-700 dark:text-white">
+								<TableHead className="px-4 py-2 text-left">#</TableHead>
+								<TableHead className="px-4 py-2 text-left">Nama</TableHead>
+								<TableHead className="px-4 py-2 text-left">
+									Tanggal Mulai
+								</TableHead>
+								<TableHead className="px-4 py-2 text-left">
+									Tanggal Selesai
+								</TableHead>
 							</TableRow>
-						))
+						</TableHeader>
+						<TableBody>
+							{history.length === 0 ? (
+								<TableRow>
+									<TableCell colSpan={4} className="text-center py-4">
+										No history found.
+									</TableCell>
+								</TableRow>
+							) : (
+								history.map((r, index) => (
+									<TableRow key={r.id} className="dark:text-white">
+										<TableCell className="whitespace-nowrap px-4 py-2">
+											{(currentPage - 1) * historyPerPage + index + 1}
+										</TableCell>
+										<TableCell className="whitespace-nowrap px-4 py-2">
+											{r.penghuni.nama}
+										</TableCell>
+										<TableCell className="whitespace-nowrap px-4 py-2">
+											{r.tanggal_masuk}
+										</TableCell>
+										<TableCell className="whitespace-nowrap px-4 py-2">
+											{r.tanggal_keluar || "N/A"}
+										</TableCell>
+									</TableRow>
+								))
+							)}
+						</TableBody>
+					</Table>
+					{/* Pagination */}
+					{pagination.total > pagination.per_page && (
+						<div className="flex justify-center mt-4">
+							<nav>
+								<ul className="inline-flex -space-x-px">
+									{Array.from({ length: pagination.last_page }, (_, i) => (
+										<li key={i}>
+											<button
+												onClick={() => paginate(i + 1)}
+												className={`px-3 py-2 border ${
+													currentPage === i + 1
+														? "bg-blue-500 text-white"
+														: "bg-white text-gray-700"
+												} border-gray-300`}>
+												{i + 1}
+											</button>
+										</li>
+									))}
+								</ul>
+							</nav>
+						</div>
 					)}
-				</TableBody>
-			</Table>
-			{/* Pagination */}
-			{pagination.total > pagination.per_page && (
-				<div className="flex justify-center mt-4">
-					<nav>
-						<ul className="inline-flex -space-x-px">
-							{Array.from({ length: pagination.last_page }, (_, i) => (
-								<li key={i}>
-									<button
-										onClick={() => paginate(i + 1)}
-										className={`px-3 py-2 border ${
-											currentPage === i + 1
-												? "bg-blue-500 text-white"
-												: "bg-white text-gray-700"
-										} border-gray-300`}>
-										{i + 1}
-									</button>
-								</li>
-							))}
-						</ul>
-					</nav>
-				</div>
+				</>
 			)}
-
 			<div className="flex justify-end mt-4 gap-3">
 				<Link to={`/rumah/${id}`}>
 					<Button className="">Kembali</Button>

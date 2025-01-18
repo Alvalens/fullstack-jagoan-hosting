@@ -135,10 +135,10 @@ const PembayaranIndex = () => {
 									Rp {item.nominal.toLocaleString()}
 								</td>
 								<td className="border border-gray-300 p-2">
-									{item.penghuni ? item.penghuni.nama : ""}
+									{item.penghuni ? item.penghuni?.nama : ""}
 								</td>
 								<td className="border border-gray-300 p-2">
-									{item.rumah ? item.rumah.nomor_rumah : ""}
+									{item.rumah ? item.rumah?.nama : ""}
 								</td>
 							</tr>
 						))}
