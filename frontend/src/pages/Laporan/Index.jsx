@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import "chart.js/auto";
@@ -33,32 +34,52 @@ const PembayaranIndex = () => {
 		}
 	}, [selectedRange]);
 
+	const monthlyValues = [];
+	const labels = [
+		"Jan",
+		"Feb",
+		"Mar",
+		"Apr",
+		"May",
+		"Jun",
+		"Jul",
+		"Aug",
+		"Sep",
+		"Oct",
+		"Nov",
+		"Dec",
+	];
+
+	let cumulativeSaldo = 0;
+	let lastMonthWithData = 0;
+
+	// Iterate through each month
+	labels.forEach((label, index) => {
+		const monthKey = new Date(2025, index).toISOString().slice(0, 7);
+		if (reportData.monthly_data[monthKey] !== undefined) {
+			cumulativeSaldo += reportData.monthly_data[monthKey];
+			lastMonthWithData = index;
+		}
+		monthlyValues.push(cumulativeSaldo);
+	});
+
+	for (let i = lastMonthWithData + 1; i < labels.length; i++) {
+		monthlyValues[i] = null;
+	}
+
 	const chartData = {
-		labels: [
-			"Jan",
-			"Feb",
-			"Mar",
-			"Apr",
-			"May",
-			"Jun",
-			"Jul",
-			"Aug",
-			"Sep",
-			"Oct",
-			"Nov",
-			"Dec",
-		],
+		labels: labels,
 		datasets: [
 			{
 				label: "Saldo per Bulan",
-				data: Object.values(reportData.monthly_data),
+				data: monthlyValues,
 				fill: false,
 				backgroundColor: "rgba(75, 192, 192, 0.6)",
 				borderColor: "rgba(75, 192, 192, 1)",
+				spanGaps: false, // Ensure gaps are not spanned
 			},
 		],
 	};
-
 	return (
 		<div className="container mx-auto p-6">
 			{/* Card Summary */}
