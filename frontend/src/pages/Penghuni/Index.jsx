@@ -47,7 +47,6 @@ const fetchPenghuni = async () => {
 		});
 		setPenghuni(response.data.data.penghunis);
 		setPagination(response.data.pagination);
-		console.log("Penghuni data fetched", response.data);
 	} catch (error) {
 		console.error("Error fetching penghuni data", error);
 	}
@@ -66,7 +65,6 @@ const fetchPenghuni = async () => {
 		try {
 			await axiosInstance.delete(`/penghunis/${id}`);
 			fetchPenghuni();
-			console.log(`Penghuni with ID: ${id} deleted.`);
 		} catch (error) {
 			console.error(`Error deleting penghuni with ID: ${id}`, error);
 		}

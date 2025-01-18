@@ -44,7 +44,6 @@ export default function RumahIndex() {
 			});
 			setRumah(response.data.data.rumahs);
 			setPagination(response.data.pagination);
-			console.log("Rumah data fetched", response.data);
 		} catch (error) {
 			console.error("Error fetching rumah data", error);
 		}
@@ -63,7 +62,6 @@ export default function RumahIndex() {
 		try {
 			await axiosInstance.delete(`/rumahs/${id}`);
 			fetchRumah();
-			console.log(`Rumah with ID: ${id} deleted.`);
 		} catch (error) {
 			console.error(`Error deleting rumah with ID: ${id}`, error);
 		}

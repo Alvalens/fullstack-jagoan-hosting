@@ -44,7 +44,6 @@ export default function PembayaranIndex() {
 			});
 			setPembayaran(response.data.data.pembayarans);
 			setPagination(response.data.pagination);
-			console.log("Pembayaran data fetched", response.data);
 		} catch (error) {
 			console.error("Error fetching pembayaran data", error);
 		}
@@ -63,7 +62,6 @@ export default function PembayaranIndex() {
 		try {
 			await axiosInstance.delete(`/pembayarans/${id}`);
 			fetchPembayaran();
-			console.log(`Pembayaran with ID: ${id} deleted.`);
 		} catch (error) {
 			console.error(`Error deleting pembayaran with ID: ${id}`, error);
 		}

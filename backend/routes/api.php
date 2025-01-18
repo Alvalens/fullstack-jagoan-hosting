@@ -8,6 +8,7 @@ use App\Http\Controllers\PenghuniController;
 use App\Http\Controllers\RumahController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\LaporanController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -25,6 +26,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/search-rumah', [SearchController::class, 'searchRumah']);
     Route::get('/history-penghuni/{id}', [AssignPenghuni::class, 'penghuniHistory']);
     Route::get('/history-pembayaran/{id}', [AssignPenghuni::class, 'pembayaranHistory']);
+    Route::get('/laporan', [LaporanController::class, 'index']);
+
 
 });
 

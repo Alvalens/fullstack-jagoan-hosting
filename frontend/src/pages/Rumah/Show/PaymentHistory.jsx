@@ -42,7 +42,6 @@ export default function PaymentHistory() {
 			});
 			setPayments(response.data.data);
 			setPagination(response.data.pagination);
-			console.log("Payment history data fetched", response.data);
 		} catch (error) {
 			console.error("Error fetching payment history data", error);
 		}

@@ -45,7 +45,6 @@ export default function PenghuniHistory() {
 			});
 			setHistory(response.data.data.data);
 			setPagination(response.data.pagination);
-			console.log("History data fetched", response.data);
 		} catch (error) {
 			console.error("Error fetching history data", error);
 		}

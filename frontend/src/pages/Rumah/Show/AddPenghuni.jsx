@@ -58,7 +58,6 @@ export default function AddPenghuni() {
 					label: penghuni.nama,
 				}));
 				setPenghuniOptions(formattedOptions);
-				console.log("Penghuni Options:", formattedOptions);
 			} catch (error) {
 				console.error("Error fetching data:", error);
 				toast.error("Gagal mengambil data");

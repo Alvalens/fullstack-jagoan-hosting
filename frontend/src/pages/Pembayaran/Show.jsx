@@ -16,7 +16,6 @@ export default function ShowPembayaran() {
 			try {
 				const response = await axiosInstance.get(`/pembayarans/${id}`);
 				setPembayaran(response.data.data);
-				console.log("Pembayaran data fetched", response.data);
 			} catch (error) {
 				console.error("Error fetching pembayaran data", error);
 				toast.error("Gagal mengambil data pembayaran");

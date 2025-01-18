@@ -90,8 +90,6 @@ export default function EditPembayaran() {
 				}));
 				setRumahOptions(formattedRumahOptions);
 
-				console.log("Penghuni Options:", formattedPenghuniOptions);
-				console.log("Rumah Options:", formattedRumahOptions);
 			} catch (error) {
 				console.error("Error fetching data:", error);
 				toast.error("Gagal mengambil data");
