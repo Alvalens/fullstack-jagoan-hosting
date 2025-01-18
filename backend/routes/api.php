@@ -24,6 +24,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/search-penghuni', [SearchController::class, 'searchPenghuni']);
     Route::get('/search-rumah', [SearchController::class, 'searchRumah']);
     Route::get('/history-penghuni/{id}', [AssignPenghuni::class, 'penghuniHistory']);
+    Route::get('/history-pembayaran/{id}', [AssignPenghuni::class, 'pembayaranHistory']);
 
 });
 

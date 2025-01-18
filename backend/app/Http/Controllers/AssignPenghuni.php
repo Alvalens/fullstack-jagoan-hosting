@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\HistoryPenghuni;
+use App\Models\Pembayaran;
 use App\Models\Penghuni;
 
 class AssignPenghuni extends Controller
@@ -93,4 +94,54 @@ class AssignPenghuni extends Controller
         ]);
     }
 
+    public function pembayaranHistory(Request $request, $id)
+    {
+        $historyPenghuni = HistoryPenghuni::where('rumah_id', $id)
+            ->where('tanggal_keluar', null)
+            ->first();
+
+        if (!$historyPenghuni) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No active penghuni found for this rumah',
+            ], 404);
+        }
+
+        $pembayarans = Pembayaran::where('rumah_id', $id)
+            ->where('penghuni_id', $historyPenghuni->penghuni_id)
+            ->get();
+
+        $payments = [];
+        foreach ($pembayarans as $pembayaran) {
+            $month = (new \DateTime($pembayaran->tanggal))->format('Y-m');
+            if (!isset($payments[$month])) {
+                $payments[$month] = [
+                    'tanggal' => $month,
+                    'terbayar' => 0,
+                    'nominal' => 115000,
+                    'lunas' => false,
+                ];
+            }
+            $payments[$month]['terbayar'] += $pembayaran->nominal;
+            $payments[$month]['lunas'] = $payments[$month]['terbayar'] >= $payments[$month]['nominal'];
+        }
+
+        // Apply pagination
+        $perPage = $request->query('per_page', 5);
+        $currentPage = $request->query('page', 1);
+        $total = count($payments);
+        $payments = array_slice(array_values($payments), ($currentPage - 1) * $perPage, $perPage);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Payment history retrieved successfully',
+            'data' => $payments,
+            'pagination' => [
+                'total' => $total,
+                'current_page' => $currentPage,
+                'last_page' => ceil($total / $perPage),
+                'per_page' => $perPage,
+            ]
+        ]);
+    }
 }
