@@ -15,4 +15,14 @@ class Pembayaran extends Model
         'penghuni_id',
         'rumah_id',
     ];
+
+    public function penghuni()
+    {
+        return $this->belongsTo(Penghuni::class);
+    }
+
+    public function rumah()
+    {
+        return $this->belongsTo(Rumah::class);
+    }
 }

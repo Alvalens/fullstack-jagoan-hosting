@@ -24,12 +24,10 @@ export function ComboboxDemo({
 	onSelect,
 	disabled = false,
 }) {
-const [open, setOpen] = React.useState(false);
+	const [open, setOpen] = React.useState(false);
 
-	const selectedLabel = data.find((item) => item.value === currentValue)?.label || "";
-	console.log("data:", data);
-	console.log("current:", currentValue);
-	console.log("Selected Label:", selectedLabel);
+	const selectedLabel =
+		data.find((item) => item.value === currentValue)?.label || "";
 
 	return (
 		<Popover open={disabled ? false : open} onOpenChange={setOpen}>
@@ -40,13 +38,13 @@ const [open, setOpen] = React.useState(false);
 					aria-expanded={open}
 					disabled={disabled}
 					className="w-full justify-between">
-					{selectedLabel || "Pilih penghuni..."}
+					{selectedLabel || "Pilih ..."}
 					<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent className="w-[300px] p-0">
 				<Command>
-					<CommandInput placeholder="Cari penghuni..." />
+					<CommandInput placeholder="Cari ..." />
 					<CommandList>
 						<CommandEmpty>Tidak ada data.</CommandEmpty>
 						<CommandGroup>

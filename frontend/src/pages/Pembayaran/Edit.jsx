@@ -13,21 +13,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import toast from "react-hot-toast";
+import axiosInstance from "@/utils/axios";
+import { useParams, useNavigate } from "react-router-dom";
 import { ComboboxDemo } from "../Rumah/Show/components/combobox";
 
 const jenis_pembayaran = ["pemasukan", "pengeluaran"];
 const jenis_pemasukan = ["iuran_kebersihan", "iuran_keamanan"];
 const jenis_pengeluaran = ["gaji", "listrik", "perbaikan jalan"];
-const rumah = [
-	{ value: "rumah-1", label: "Rumah 1" },
-	{ value: "rumah-2", label: "Rumah 2" },
-	{ value: "rumah-3", label: "Rumah 3" },
-];
-
-const penghuni = [
-	{ value: "john-doe", label: "John Doe" },
-	{ value: "jane-doe", label: "Jane Doe" },
-];
 
 const pembayaranSchema = z.object({
 	nominal: z.string().min(1, "Nominal wajib diisi"),
@@ -35,23 +27,18 @@ const pembayaranSchema = z.object({
 	keterangan: z.string().min(1, "Keterangan wajib diisi"),
 	deskripsi: z.string().min(1, "Deskripsi wajib diisi"),
 	tanggal: z.string().min(1, "Tanggal wajib diisi"),
-	id_penghuni: z.string().optional(),
-	id_rumah: z.string().optional(),
+	nominal_per_bulan: z.string().optional(),
+	penghuni_id: z.string().optional(),
+	rumah_id: z.string().optional(),
 });
 
-// Example existing data for editing
-const mockData = {
-	nominal: "100.000",
-	jenis: "pemasukan",
-	keterangan: "iuran_kebersihan",
-	deskripsi: "Iuran kebersihan bulan Agustus",
-	tanggal: "2024-08-01",
-	id_penghuni: "john-doe",
-	id_rumah: "rumah-1",
-};
-
 export default function EditPembayaran() {
+	const { id } = useParams();
+	const navigate = useNavigate();
 	const [keteranganOptions, setKeteranganOptions] = useState([]);
+	const [penghuniOptions, setPenghuniOptions] = useState([]);
+	const [rumahOptions, setRumahOptions] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const {
 		register,
@@ -61,24 +48,60 @@ export default function EditPembayaran() {
 		formState: { errors },
 	} = useForm({
 		resolver: zodResolver(pembayaranSchema),
-		defaultValues: mockData,
 	});
 
 	useEffect(() => {
-		setValue("nominal", mockData.nominal);
-		setValue("jenis", mockData.jenis);
-		setValue("keterangan", mockData.keterangan);
-		setValue("deskripsi", mockData.deskripsi);
-		setValue("tanggal", mockData.tanggal);
-		setValue("id_penghuni", mockData.id_penghuni);
-		setValue("id_rumah", mockData.id_rumah);
+		const fetchData = async () => {
+			setIsLoading(true);
+			try {
+				const [pembayaranResponse, penghuniResponse, rumahResponse] =
+					await Promise.all([
+						axiosInstance.get(`/pembayarans/${id}`),
+						axiosInstance.get("/search-penghuni"),
+						axiosInstance.get("/search-rumah"),
+					]);
 
-		if (mockData.jenis === "pemasukan") {
-			setKeteranganOptions(jenis_pemasukan);
-		} else if (mockData.jenis === "pengeluaran") {
-			setKeteranganOptions(jenis_pengeluaran);
-		}
-	}, [setValue]);
+				const pembayaran = pembayaranResponse.data.data;
+				setValue("nominal", pembayaran.nominal);
+				setValue("jenis", pembayaran.jenis);
+				setValue("keterangan", pembayaran.keterangan);
+				setValue("deskripsi", pembayaran.deskripsi);
+				setValue("tanggal", pembayaran.tanggal);
+				setValue("penghuni_id", pembayaran.penghuni_id.toString());
+				setValue("rumah_id", pembayaran.rumah_id.toString());
+
+				if (pembayaran.jenis === "pemasukan") {
+					setKeteranganOptions(jenis_pemasukan);
+				} else if (pembayaran.jenis === "pengeluaran") {
+					setKeteranganOptions(jenis_pengeluaran);
+				}
+
+				const formattedPenghuniOptions = penghuniResponse.data.map(
+					(penghuni) => ({
+						value: penghuni.id.toString(),
+						label: penghuni.nama,
+					})
+				);
+				setPenghuniOptions(formattedPenghuniOptions);
+
+				const formattedRumahOptions = rumahResponse.data.map((rumah) => ({
+					value: rumah.id.toString(),
+					label: rumah.nama,
+				}));
+				setRumahOptions(formattedRumahOptions);
+
+				console.log("Penghuni Options:", formattedPenghuniOptions);
+				console.log("Rumah Options:", formattedRumahOptions);
+			} catch (error) {
+				console.error("Error fetching data:", error);
+				toast.error("Gagal mengambil data");
+			} finally {
+				setIsLoading(false);
+			}
+		};
+
+		fetchData();
+	}, [id, setValue]);
 
 	const handleJenisChange = (value) => {
 		setValue("jenis", value);
@@ -89,10 +112,34 @@ export default function EditPembayaran() {
 		}
 	};
 
-	const onSubmit = (data) => {
-		console.log("Form Data:", data);
-		toast.success("Pembayaran berhasil diperbarui");
+	const onSubmit = async (data) => {
+		try {
+			// Send data to API
+			const response = await axiosInstance.put(`/pembayarans/${id}`, data, {
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+
+			if (response.data.status === "success") {
+				toast.success("Pembayaran berhasil diperbarui");
+				navigate("/pembayaran");
+			}
+		} catch (error) {
+			toast.error("Gagal memperbarui pembayaran");
+			if (error.response.status === 422) {
+				if (error.response.data.errors) {
+					Object.entries(error.response.data.errors).forEach(([key, value]) => {
+						toast.error(`${key}: ${value}`);
+					});
+				}
+			}
+		}
 	};
+
+	if (isLoading) {
+		return <div>Loading...</div>;
+	}
 
 	return (
 		<div className="mx-auto p-6 bg-white rounded-lg shadow">
@@ -195,9 +242,9 @@ export default function EditPembayaran() {
 				<div>
 					<label className="block text-sm">Pilih Penghuni</label>
 					<ComboboxDemo
-						data={penghuni}
-						currentValue={watch("id_penghuni")}
-						onSelect={(selected) => setValue("id_penghuni", selected)}
+						data={penghuniOptions}
+						currentValue={watch("penghuni_id")}
+						onSelect={(selected) => setValue("penghuni_id", selected)}
 					/>
 				</div>
 
@@ -205,12 +252,15 @@ export default function EditPembayaran() {
 				<div>
 					<label className="block text-sm">Pilih Rumah</label>
 					<ComboboxDemo
-						data={rumah}
-						currentValue={watch("id_rumah")}
-						onSelect={(selected) => setValue("id_rumah", selected)}
+						data={rumahOptions}
+						currentValue={watch("rumah_id")}
+						onSelect={(selected) => setValue("rumah_id", selected)}
 					/>
 				</div>
-
+				<span className="text-sm text-gray-500">
+					{" "}
+					* untuk pengeluaran, penghuni dan rumah dapat dikosongakn
+				</span>
 				{/* Submit Button */}
 				<div className="flex justify-end">
 					<Button type="submit">Perbarui</Button>
