@@ -36,21 +36,25 @@ Ensure the following tools are installed on your system:
    ```bash
    cd backend
    ```
+
 2. Install PHP dependencies:
 
    ```bash
    composer install
    ```
+
 3. If there compatibility issues try running:
 
    ```bash
    composer update
    ```
+
 4. Create a `.env` file:
 
    ```bash
    cp .env.example .env
    ```
+
 5. Configure the `.env` file:
 
    * Update the database credentials:
@@ -69,29 +73,32 @@ Ensure the following tools are installed on your system:
      SANCTUM_STATEFUL_DOMAINS=localhost
      CORS_ALLOWED_ORIGINS=http://localhost:5173
      ```
+
 6. Generate the application key:
 
    ```bash
    php artisan key:generate
    ```
-7. Run migrations and seeders (if applicable):
+
+7. Run migrations and seeders:
 
    ```bash
    php artisan migrate --seed
    ```
+
 8. Run storage link:
 
    ```
    php artisan storage:link
    ```
 
-   1. Start the Laravel development server:
+9. Start the Laravel development server:
 
-      ```bash
-      php artisan serve
-      ```
+   ```bash
+   php artisan serve
+   ```
 
-      Laravel backend will run on [http://127.0.0.1:8000]().
+   Laravel backend will run on [http://127.0.0.1:8000]().
 
 ---
 
@@ -102,6 +109,7 @@ Ensure the following tools are installed on your system:
    ```bash
    cd ../frontend
    ```
+
 2. Install Node.js dependencies:
 
    ```bash
@@ -113,14 +121,21 @@ Ensure the following tools are installed on your system:
    ```bash
    npm install -g pnpm@latest-10
    ```
-3. Update the API base URL in the React configuration file, often located in `src/utils/axios.js` or `.env`:
+
+3. Create a `.env` file:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+5. Update the API base URL and asset base url in the `.env` file:
 
    ```javascript
-   const axiosInstance = axios.create({
-       baseURL: "http://127.0.0.1:8000/api",
-   });
+   VITE_API_BASE_URL="http://127.0.0.1:8000/api/"
+   VITE_APP_ASSET_URL="http://127.0.0.1:8000/storage/"
    ```
-4. Start the React development server:
+
+6. Start the React development server:
 
    ```bash
    pnpm run dev
