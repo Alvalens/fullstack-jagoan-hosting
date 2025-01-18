@@ -17,10 +17,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::apiResource('penghunis', PenghuniController::class);
     Route::apiResource('rumahs', RumahController::class);
+
+
     Route::get('/assign-penghuni/{id}', [AssignPenghuni::class, 'index']);
     Route::post('/assign-penghuni', [AssignPenghuni::class, 'store']);
     Route::get('/search-penghuni', [SearchController::class, 'searchPenghuni']);
-    Route::apiResource('history-penghunis', SearchController::class);
+    Route::get('/history-penghuni/{id}', [AssignPenghuni::class, 'penghuniHistory']);
+
     Route::apiResource('pembayarans', PembayaranController::class);
 });
 
