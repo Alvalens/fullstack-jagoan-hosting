@@ -1,7 +1,6 @@
 import {
 	Command,
 	Home,
-	Settings,
 	Users,
   LucideHome,
 	Receipt
@@ -50,17 +49,7 @@ const menuItems = [
 				icon: Receipt,
 			},
 		],
-	},
-	{
-		category: "User",
-		items: [
-			{
-				title: "Profile",
-				url: "/admin/profile",
-				icon: Settings,
-			},
-		],
-	},
+	}
 ];
 
 export function AppSidebar() {

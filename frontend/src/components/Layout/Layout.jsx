@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User } from "lucide-react";
 import { DropdownMenuGroup } from "@radix-ui/react-dropdown-menu";
 import { Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -72,10 +71,6 @@ export default function Layout() {
 									</DropdownMenuLabel>
 									<DropdownMenuSeparator />
 									<DropdownMenuGroup>
-										<DropdownMenuItem>
-											<User className="mr-2 h-4 w-4" />
-											<span>Profile</span>
-										</DropdownMenuItem>
 										<DropdownMenuItem
 											onSelect={handleLogout}>
 											<LogOut className="mr-2 h-4 w-4" />
