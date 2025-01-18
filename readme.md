@@ -4,7 +4,7 @@
 
 Ensure the following tools are installed on your system:
 
-* PHP (>= 8.1) and Composer
+* PHP (>= 8.2) and Composer
 * Node.js (>= 18.x) and `pnpm`/`npm`
 * MySQL or any preferred database
 * A web server like Apache/Nginx
@@ -41,12 +41,19 @@ Ensure the following tools are installed on your system:
    ```bash
    composer install
    ```
-3. Create a `.env` file:
+3. If there compatibility issues try running:
+
+   ```bash
+   composer update
+   ```
+
+4. Create a `.env` file:
 
    ```bash
    cp .env.example .env
    ```
-4. Configure the `.env` file:
+
+5. Configure the `.env` file:
 
    * Update the database credentials:
 
@@ -64,22 +71,23 @@ Ensure the following tools are installed on your system:
      SANCTUM_STATEFUL_DOMAINS=localhost
      CORS_ALLOWED_ORIGINS=http://localhost:5173
      ```
-5. Generate the application key:
+6. Generate the application key:
 
    ```bash
    php artisan key:generate
    ```
-6. Run migrations and seeders (if applicable):
+7. Run migrations and seeders (if applicable):
 
    ```bash
    php artisan migrate --seed
    ```
-7. Run storage link:
+8. Run storage link:
 
    ```
    php artisan storage:link
    ```
-8. Start the Laravel development server:
+
+9. Start the Laravel development server:
 
    Laravel backend will run on [http://127.0.0.1:8000]().
 
