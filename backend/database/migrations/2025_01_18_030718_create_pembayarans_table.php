@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('keterangan');
             $table->string('deskripsi');
             $table->date('tanggal');
-            $table->foreignId('penghuni_id')->constrained()->nullable()->onDelete('cascade');
-            $table->foreignId('rumah_id')->constrained()->nullable()->onDelete('cascade');
+            $table->foreignId('penghuni_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('rumah_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

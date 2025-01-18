@@ -13,6 +13,7 @@ import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import axiosInstance from "@/utils/axios";
 import { showImage } from "@/lib/utils";
+import Modal from "@/components/Modal";
 
 export default function PenghuniIndex() {
 	const [penghuni, setPenghuni] = useState([]);
@@ -64,13 +65,18 @@ export default function PenghuniIndex() {
 
 	const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+
+
 	const deletePenghuni = async (id) => {
-		try {
-			await axiosInstance.delete(`/penghunis/${id}`);
-			fetchPenghuni();
-		} catch (error) {
-			console.error(`Error deleting penghuni with ID: ${id}`, error);
-		}
+			try {
+				await axiosInstance.delete(`/penghunis/${id}`);
+				fetchPenghuni();
+			} catch (error) {
+				console.error(
+					`Error deleting penghuni with ID: ${id}`,
+					error
+				);
+			} 
 	};
 
 	return (
@@ -152,11 +158,11 @@ export default function PenghuniIndex() {
 													className="bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600">
 													<Pencil size={16} />
 												</Link>
-												<button
-													onClick={() => deletePenghuni(p.id)}
-													className="bg-red-500 text-white p-2 rounded hover:bg-red-600">
-													<Trash2 size={16} />
-												</button>
+												<Modal func={()=>deletePenghuni(p.id)}>
+													<button className="bg-red-500 text-white p-2 rounded hover:bg-red-600">
+														<Trash2 size={16} />
+													</button>
+												</Modal>
 											</div>
 										</TableCell>
 									</TableRow>

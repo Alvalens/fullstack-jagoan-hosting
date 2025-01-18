@@ -12,6 +12,7 @@ import { Trash2, Pencil, Eye } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import axiosInstance from "@/utils/axios";
+import Modal from "@/components/Modal";
 
 export default function RumahIndex() {
 	const [rumah, setRumah] = useState([]);
@@ -146,11 +147,11 @@ export default function RumahIndex() {
 													className="bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600">
 													<Pencil size={16} />
 												</Link>
-												<button
-													onClick={() => deleteRumah(r.id)}
-													className="bg-red-500 text-white p-2 rounded hover:bg-red-600">
-													<Trash2 size={16} />
-												</button>
+												<Modal func={() => deleteRumah(r.id)}>
+													<button className="bg-red-500 text-white p-2 rounded hover:bg-red-600">
+														<Trash2 size={16} />
+													</button>
+												</Modal>
 											</div>
 										</TableCell>
 									</TableRow>
