@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('history_penghunis', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('penghuni_id')->constrained();
-            $table->foreignId('rumah_id')->constrained();
+            $table->foreignId('penghuni_id')->constrained()->onDelete('cascade');
+            $table->foreignId('rumah_id')->constrained()->onDelete('cascade');
             $table->date('tanggal_masuk');
             $table->date('tanggal_keluar')->nullable();
             $table->timestamps();
