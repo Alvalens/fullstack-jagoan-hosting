@@ -46,13 +46,11 @@ Ensure the following tools are installed on your system:
    ```bash
    composer update
    ```
-
 4. Create a `.env` file:
 
    ```bash
    cp .env.example .env
    ```
-
 5. Configure the `.env` file:
 
    * Update the database credentials:
@@ -87,9 +85,13 @@ Ensure the following tools are installed on your system:
    php artisan storage:link
    ```
 
-9. Start the Laravel development server:
+   1. Start the Laravel development server:
 
-   Laravel backend will run on [http://127.0.0.1:8000]().
+      ```bash
+      php artisan serve
+      ```
+
+      Laravel backend will run on [http://127.0.0.1:8000]().
 
 ---
 
