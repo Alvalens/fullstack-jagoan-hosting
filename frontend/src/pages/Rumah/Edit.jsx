@@ -41,7 +41,7 @@ export default function EditRumah() {
 		const fetchRumah = async () => {
 			try {
 				const response = await axiosInstance.get(`/rumahs/${id}`);
-				const rumah = response.data.data;
+				const rumah = response.data.data.rumah;
 
 				setValue("nama", rumah.nama);
 				setValue("alamat", rumah.alamat);
