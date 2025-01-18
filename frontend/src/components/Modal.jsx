@@ -16,10 +16,9 @@ export default function Modal({ children, func }) {
 			<AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
 			<AlertDialogContent>
 				<AlertDialogHeader>
-					<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+					<AlertDialogTitle>Apakah anda yakin?</AlertDialogTitle>
 					<AlertDialogDescription>
-						This action cannot be undone. This will permanently delete this data
-						and other correlated data.
+						Ini akan menghapus data ini dan data yang berkorelasi secara permanen. Tindakan ini tidak dapat diurungkan.
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter>
